@@ -1,6 +1,6 @@
 ---
 theme: default
-title: 2026 hardware platform deployment overview
+title: hardware platform configuration managment overview
 ---
 
 # hardware platform configuration managment overview
