@@ -1,4 +1,4 @@
-# 2026-platform-deployment-overview
+# 2026 hardware platform configuration managment overview
 
 A overview of Mozilla RelOps platform deployments.
 

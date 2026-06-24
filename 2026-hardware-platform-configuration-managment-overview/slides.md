@@ -19,6 +19,9 @@ https://github.com/mozilla-platform-ops/presentations/
    - Are the perf workers self-checked regularly?
  - How much time does it take to deploy a configuration change
 
+<!--
+The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
+-->
 
 ---
 
