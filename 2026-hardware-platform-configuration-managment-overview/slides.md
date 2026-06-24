@@ -9,15 +9,15 @@ https://github.com/mozilla-platform-ops/presentations/
 
 ---
 
-# DRAFT SLIDE / Requested questions (if answered, note slide number)
- - How are they configured
- - how frequently is the configuration deployed
- - how often are they refreshed or reimaged
- - What do we enable vs not enable.
- - If we want to log into a perf worker with screen sharing is it possible
-   - what about shell
-   - Are the perf workers self-checked regularly?
- - How much time does it take to deploy a configuration change
+# Overview / TLDR / Requested questions index
+  - How are they configured? [Slides 3-5](/3)
+  - How frequently is the configuration deployed? [Slide 6](/6)
+  - How often are they refreshed or reimaged? [Slide 6](/6)
+  - What do we enable vs not enable? [Slide 8](/8)
+  - If we want to log into a worker with screen sharing is it possible?
+    - What about SSH/Shell?
+  - Are the perf workers self-checked regularly?
+  - How much time does it take to deploy a configuration change?
 
 <!--
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
@@ -60,10 +60,17 @@ The last comment block of each slide will be treated as slide notes. It will be 
   - Masterless puppet used to be the default.
     - Hosts would check in with coordination server regularly.
   - Masterless is better fit for our fleet management style (and creating cloud VMs).
-    - Hosts individually control when they 'converge' on the desired configuration.
-      - Our hosts converge after every TC task/reboot (Mac and Linux) or when a ronin-puppet change is detected (Windows).
 - Desired state is verified via ServerSpec/InSpec tests.
   - Tests are run at PR merge on VMs, not continuously on production hosts.
+
+---
+
+# How frequently do hosts update their configuration?
+
+- Hosts individually control when they apply the configuration (aka 'converge' on the desired configuration).
+  - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
+  - Windows: When a ronin-puppet change is detected, the host is reimaged and the Puppet configuration is applied. Hosts do not converge in between TC task runs.
+
 
 ---
 
@@ -72,6 +79,20 @@ The last comment block of each slide will be treated as slide notes. It will be 
 - Mac: TBD
 - Linux: /etc/puppet/role
 - Windows: TBD
+
+---
+
+# What do we enable vs not enable?
+
+- Generally:
+  - If it's been disabled in the past, we usually will disable it in future platform versions (Ubuntu 22.04 -> 24.04).
+  - If someone asks for something to be disabled, we will usually disable it.
+- In the past, we've tried to keep systems 'user-like'.
+  - We wouldn't fully strip the systems services. We were told more user-like was the goal.
+- Going forward, we're open to whatever is desired (e.g. more barebones stripped-down systems and also user-like systems)
+  - alternate configurations are additional overhead for us manage/test/update
+  - splits pool resources also
+
 
 ---
 
