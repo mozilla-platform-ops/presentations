@@ -16,8 +16,8 @@ https://github.com/mozilla-platform-ops/presentations/
   - What do we enable vs not enable? [Slide 8](/8)
   - If we want to log into a worker with screen sharing is it possible? [Slide 9](/9)
     - What about SSH/Shell?
-  - Are the perf workers self-checked regularly?
-  - How much time does it take to deploy a configuration change?
+  - Are the perf workers self-checked regularly? [Slide 10](/10)
+  - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
 
 <!--
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
@@ -27,9 +27,9 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 # How do we configure our hardware hosts?
 
-- Mac: Puppet/OpenVox
-- Linux: Puppet/OpenVox
-- Windows: Puppet/OpenVox
+- Mac: Puppet (ronin-puppet)
+- Linux: Puppet (ronin-puppet)
+- Windows: Puppet (ronin-puppet)
 - Android:
   - requirements doc for android hardware testing vendors (infrastructure and devices): LINK INCOMING
   - hosts (phones): vendor-managed
@@ -124,7 +124,8 @@ The last comment block of each slide will be treated as slide notes. It will be 
     - Should be cautious.
       - e.g. If the entire fleet decides it's not healthy incorrectly, we could end up with no workers.
 - We do monitor a bunch of things... see next slides.
-- What is desired? Tell us more about this question.
+- Tell us more about this question.
+  - What do you want?
 
 ---
 
