@@ -114,6 +114,10 @@ The last comment block of each slide will be treated as slide notes. It will be 
     - How long you need the host for.
     - What you want to do with the host.
 
+<!--
+TODO: move the bug filing directions to wiki/mana
+-->
+
 ---
 
 # Are the perf workers self-checked regularly?
@@ -134,9 +138,11 @@ The last comment block of each slide will be treated as slide notes. It will be 
 ## Host metics
 - Free disk space
   - Tascluster generic-worker refuses to work below a specified threshold
-  - We also have Icinga monitoring.
+  - We also have Icinga monitoring. TODO:link
 - Performance (CPU)
   - Not yet, but planned. See Fleetbench.  
+- TC g-w binary running
+  - Checked in Icinga TODO: link
 
 ---
 
@@ -144,8 +150,7 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 ## TC worker pool metrics
 
-- TC g-w worker running
-  - Checked in icinga
+
 - TC running worker count
   - Counts are logged in Prometheus and displayed/alerted on in Grafana.
     - Checks for some android pools. Rolling out to other infra.
@@ -158,18 +163,33 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 # How much time does it take to deploy a configuration change?, part 1
 
-## Mac/Linux Process:
+## Mac/Linux Process
+
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
   - automated PR testing (1 hour)
   - (optional) manual testing (varies)
-- review PR and merge (1 hour)
+- review and merge PR (1 hour)
+- deploy PR (1 hour, can vary)
+  - pools with fewer tasks can take longer, but next task will always pick up the change.
+    - manual Puppet run can be done if absolutely necessary.
+- total: optimal case: 4 hours or less
+
+<!--
+
+details/caveats on timing:
+
+- create PR (1 hour, can vary)
+- test PR (1 hour, can vary)
+- review and merge PR (1 hour)
 - deploy PR (1 hour, can vary)
   - low risk: immediately land to master, hosts will pick up change after next reboot/task completion.
-    - pools with fewer tasks can take longer, but next task will always pick up the change.
-      - manual Puppet run can be done if absolutely necessary.
-  - higher risk: we may roll the change out slowly via override files.
+  - higher risk:
+    - we may roll the change out slowly via override files.
+    - we may deploy the change to a test TC worker pool and run larger sets of tests
 - total: optimal case: 4 hours or less
+
+-->
 
 ---
 
