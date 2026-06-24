@@ -42,14 +42,15 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 # Puppet/OpenVox
 
-- Puppet: `foundation for infrastructure automation`
+- Puppet: define state and then make host match
   - process
     - define the desired host state in Puppet's domain specific language (DSL)
     - run Puppet to make the host match the desired configuration
   - links
     - https://www.puppet.com/
     - https://voxpupuli.org/openvox/
-- OpenVox is a free opensource fork of Puppet (recently acquired by Perforce and license was changed)
+- OpenVox is a free opensource fork of Puppet.
+  - Puppet was recently acquired by Perforce and license was changed.
 - RelOps' Puppet repository: https://github.com/mozilla-platform-ops/ronin_puppet
 
 ---
@@ -104,19 +105,9 @@ The last comment block of each slide will be treated as slide notes. It will be 
   - If you're going to be changing things, we usually want to put the host into a dedicated pool.
   - If you're going to change things, we will usually reimage and redeploy the host when done.
   - We have limited resources (e.g. we can't have 30 loaners in a pool of 100 hosts).
-- File a RelOps JIRA ticket for a 'loaner'. TODO: move this to mana/wiki.
-  - Specify what you'd like:
-    - How many hosts?
-    - Which hosts or which pool to pull hosts from?
-    - What TC pool the host should be in. Existing or a new test pool.
-    - Full sudo/root access or just a user account.
-    - Shell, Screen sharing, or both.
-    - How long you need the host for.
-    - What you want to do with the host.
+- File a RelOps JIRA ticket for a 'loaner'.
+  - See https://mozilla-hub.atlassian.net/wiki/x/AQDvpw.
 
-<!--
-TODO: move the bug filing directions to wiki/mana
--->
 
 ---
 
