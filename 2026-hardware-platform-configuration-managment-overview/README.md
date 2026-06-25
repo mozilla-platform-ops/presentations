@@ -1,29 +1,47 @@
-# 2026 hardware platform configuration managment overview
+# 2026 hardware platform configuration management overview
 
-A overview of Mozilla RelOps platform deployments.
+An overview of Mozilla RelOps platform deployments.
 
-Initially focussing on how we deploy our hardware platforms.
+Initially focusing on how we deploy our hardware platforms.
 
-## viewing and development
+## Viewing and Development
 
-The slides are in markdown format, so if you just want to read the content, just view the file.
+The slides are in Markdown format, so if you just want to read the content, open `slides.md` directly.
 
-If you'd like a rich presentation / viewer install Slidev.
+For the rich presentation viewer, use Slidev.
 
-### Slidev installation and use
+### Prerequisites
+
+Install Bun:
+
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+
+After installation, restart your shell or source your shell profile so `bun` is on your `PATH`.
+
+```bash
+bun --version
+```
+
+### Install Slidev
 
 Uses Slidev (https://sli.dev/).
 
 ```bash
-# install slidev tool globally
 bun i -g @slidev/cli
-
-# run it in this current dir
-slidev
-
-# follow onscreen directions to view the slides
 ```
 
-#### Slidev getting started / writing slide decks
+### Run the Deck
+
+From this directory:
+
+```bash
+slidev
+```
+
+Follow the on-screen directions to view the slides.
+
+### Slidev Docs
 
 https://sli.dev/guide/
