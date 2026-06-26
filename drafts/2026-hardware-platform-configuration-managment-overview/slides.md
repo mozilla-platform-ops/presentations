@@ -10,14 +10,14 @@ https://github.com/mozilla-platform-ops/presentations/
 ---
 
 # Overview / TLDR / Requested questions index
-  - How are they configured? [Slides 3-5](/3)
-  - How frequently is the configuration deployed? [Slide 6](/6)
-  - How often are they refreshed or reimaged? [Slide 6](/6)
-  - What do we enable vs not enable? [Slide 8](/8)
-  - If we want to log into a worker with screen sharing is it possible? [Slide 9](/9)
+  - How are they configured? [Slides 3-5](./3)
+  - How frequently is the configuration deployed? [Slide 6](./6)
+  - How often are they refreshed or reimaged? [Slide 6](./6)
+  - What do we enable vs not enable? [Slide 8](./8)
+  - If we want to log into a worker with screen sharing is it possible? [Slide 9](./9)
     - What about SSH/Shell?
-  - Are the perf workers self-checked regularly? [Slide 10](/10)
-  - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
+  - Are the perf workers self-checked regularly? [Slide 10](./10)
+  - How much time does it take to deploy a configuration change? [Slides 13-14](./13)
 
 <!--
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
