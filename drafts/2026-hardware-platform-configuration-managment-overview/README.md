@@ -50,6 +50,12 @@ Build the static viewer for GitHub Pages:
 bun run build
 ```
 
+The GitHub Pages deployment publishes the deck under:
+
+```text
+/presentations/drafts/2026-hardware-platform-configuration-managment-overview/
+```
+
 Build a local static viewer without the GitHub Pages base path:
 
 ```bash
@@ -65,6 +71,8 @@ bun run export
 ### GitHub Pages
 
 This repository includes a GitHub Actions workflow that builds and deploys the deck to GitHub Pages on pushes to `main`.
+
+The root Pages URL lists available presentation directories. This draft deck is published under its `drafts/` path.
 
 In GitHub, configure the repository's Pages source to use **GitHub Actions**.
 

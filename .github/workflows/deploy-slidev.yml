@@ -37,10 +37,19 @@ jobs:
       - name: Build Slidev deck
         run: bun run build
 
+      - name: Assemble Pages site
+        run: |
+          rm -rf ../../public
+          mkdir -p ../../public
+          cp -R ../../site/. ../../public/
+          mkdir -p ../../public/drafts/2026-hardware-platform-configuration-managment-overview
+          cp -R dist/. ../../public/drafts/2026-hardware-platform-configuration-managment-overview/
+          cp dist/404.html ../../public/404.html
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: drafts/2026-hardware-platform-configuration-managment-overview/dist
+          path: public
 
   deploy:
     environment:
