@@ -29,7 +29,7 @@ bun --version
 Uses Slidev (https://sli.dev/).
 
 ```bash
-bun i -g @slidev/cli
+bun install
 ```
 
 ### Run the Deck
@@ -37,10 +37,36 @@ bun i -g @slidev/cli
 From this directory:
 
 ```bash
-slidev
+bun run dev
 ```
 
 Follow the on-screen directions to view the slides.
+
+### Build the Deck
+
+Build the static viewer for GitHub Pages:
+
+```bash
+bun run build
+```
+
+Build a local static viewer without the GitHub Pages base path:
+
+```bash
+bun run build:local
+```
+
+Export a PDF:
+
+```bash
+bun run export
+```
+
+### GitHub Pages
+
+This repository includes a GitHub Actions workflow that builds and deploys the deck to GitHub Pages on pushes to `main`.
+
+In GitHub, configure the repository's Pages source to use **GitHub Actions**.
 
 ### Slidev Docs
 

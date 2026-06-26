@@ -1,0 +1,15 @@
+{
+  "name": "2026-hardware-platform-configuration-management-overview",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev --remote --open",
+    "build": "slidev build --base /presentations/ --without-notes",
+    "build:local": "slidev build --without-notes",
+    "export": "slidev export"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^52.16.0",
+    "@slidev/theme-default": "^0.25.0"
+  }
+}
