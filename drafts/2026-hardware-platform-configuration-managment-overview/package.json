@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "slidev --remote --open",
-    "build": "slidev build --base /presentations/drafts/2026-hardware-platform-configuration-managment-overview/ --router-mode hash --without-notes",
+    "build": "slidev build --base ./ --router-mode hash --without-notes",
     "build:local": "slidev build --without-notes",
     "export": "slidev export"
   },
