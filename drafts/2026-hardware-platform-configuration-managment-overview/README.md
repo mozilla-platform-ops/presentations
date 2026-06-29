@@ -50,7 +50,7 @@ Build the static viewer for GitHub Pages:
 bun run build
 ```
 
-The build uses the full GitHub Pages URL as Slidev's base path so slide navigation stays absolute under the nested deck path.
+The build uses Slidev's hash router mode so slide navigation works under the nested GitHub Pages path.
 
 The GitHub Pages deployment publishes the deck under:
 
