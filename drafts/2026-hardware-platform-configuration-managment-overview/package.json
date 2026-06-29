@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "slidev --remote --open",
-    "build": "slidev build --base /presentations/drafts/2026-hardware-platform-configuration-managment-overview/ --without-notes",
+    "build": "slidev build --base https://mozilla-platform-ops.github.io/presentations/drafts/2026-hardware-platform-configuration-managment-overview/ --without-notes",
     "build:local": "slidev build --without-notes",
     "export": "slidev export"
   },
