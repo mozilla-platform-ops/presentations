@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "slidev --remote --open",
-    "build": "slidev build --base ./ --router-mode hash",
+    "build": "slidev build --base ./ --router-mode hash && node scripts/patch-slidev-pages-build.mjs",
     "build:local": "slidev build",
     "export": "slidev export"
   },

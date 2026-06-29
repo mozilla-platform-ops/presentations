@@ -44,7 +44,6 @@ jobs:
           cp -R ../../site/. ../../public/
           mkdir -p ../../public/drafts/2026-hardware-platform-configuration-managment-overview
           cp -R dist/. ../../public/drafts/2026-hardware-platform-configuration-managment-overview/
-          cp dist/404.html ../../public/404.html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
