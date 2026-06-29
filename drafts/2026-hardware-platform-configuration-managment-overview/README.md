@@ -58,6 +58,12 @@ The GitHub Pages deployment publishes the deck under:
 /presentations/drafts/2026-hardware-platform-configuration-managment-overview/
 ```
 
+Presenter mode is available under the same deck URL:
+
+```text
+/presentations/drafts/2026-hardware-platform-configuration-managment-overview/#/presenter/1
+```
+
 Build a local static viewer without the GitHub Pages base path:
 
 ```bash

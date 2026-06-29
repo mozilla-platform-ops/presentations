@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "slidev --remote --open",
-    "build": "slidev build --base ./ --router-mode hash --without-notes",
-    "build:local": "slidev build --without-notes",
+    "build": "slidev build --base ./ --router-mode hash",
+    "build:local": "slidev build",
     "export": "slidev export"
   },
   "devDependencies": {
