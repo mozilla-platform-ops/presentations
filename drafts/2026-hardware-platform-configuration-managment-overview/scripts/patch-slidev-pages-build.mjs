@@ -5,7 +5,10 @@ const dist = new URL('../dist/', import.meta.url)
 
 async function patchFile(path) {
   let text = await readFile(path, 'utf8')
-  text = text.replaceAll('./presenter/', '/presenter/')
+  text = text.replace(
+    'return`./${n?`export/${r}`:t?`presenter/${r}`:`${r}`}`',
+    'return n?`./export/${r}`:t?`/presenter/${r}`:`./${r}`',
+  )
   await writeFile(path, text)
 }
 
