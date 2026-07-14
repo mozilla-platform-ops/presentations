@@ -27,42 +27,42 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 # How do we configure our hardware hosts?
 
-- Mac: Puppet (ronin-puppet)
-- Linux: Puppet (ronin-puppet)
-- Windows: Puppet (ronin-puppet)
-- Android:
-  - requirements doc for android hardware testing vendors (infrastructure and devices): LINK INCOMING
-  - hosts (phones): vendor-managed
-    - effort to codify requirements for hosts: JIRA LINK INCOMING
-  - execution environment
-    - via Dockerfile for Bitbar
-    - via shell scripts for LambdaTest
+TLDR: Puppet
+
+- Mac: Puppet (flash OS and then run ronin-puppet)
+- Linux: Puppet (flash OS and then run ronin-puppet)
+- Windows: Puppet (flash an image created with ronin-puppet)
+- Android: it's complicated... see [Slide 15](/15)
 
 ---
 
-# Puppet/OpenVox
+# Puppet
+
+responsible for host configuration
 
 - Puppet: define state and then make host match
   - process
     - define the desired host state in Puppet's domain specific language (DSL)
-    - run Puppet to make the host match the desired configuration
-  - links
-    - https://www.puppet.com/
-    - https://voxpupuli.org/openvox/
-- OpenVox is a free opensource fork of Puppet.
-  - Puppet was recently acquired by Perforce and license was changed.
-- RelOps' Puppet repository: https://github.com/mozilla-platform-ops/ronin_puppet
+    - apply the Puppet configuration to the host (based on role)
+      - 'roles' correspond to TC worker pools
+        - for imaging-based workflows, a specific OS and configuration
+    - verify configuration via ServerSpec/InSpec tests
+      - tests are run at PR merge on GH and Azure VMs, not continuously on production hosts
+
 
 ---
 
 # Ronin Puppet
 
-- Why `ronin` (masterless) Puppet?
-  - Masterless puppet used to be the default.
-    - Hosts would check in with coordination server regularly.
-  - Masterless is better fit for our fleet management style (and creating cloud VMs).
-- Desired state is verified via ServerSpec/InSpec tests.
-  - Tests are run at PR merge on VMs, not continuously on production hosts.
+our (RelOps) Puppet repository
+
+- Why `ronin`?
+  - Japanese, relating to a samurai without a lord or master.
+  - Puppet used to only work with a central server (master).
+  - Masterless is better fit for our fleet management style (and creating cloud images).
+    - Hosts specify their role vs a server telling them.
+    - For creating cloud images, the tool specifies the role the image should have.
+
 
 ---
 
@@ -191,8 +191,13 @@ details/caveats on timing:
 
 ---
 
-# Android
+# How do we configure our Android phones?
 
-- TBD
-  - Bitbar
-  - Lambdatest
+and their Docker environments
+
+  - hosts (phones): mostly vendor-managed but some things can be configured in our startup scripts
+    - requirements document (focuses on infra mostly vs devices): https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit
+    - new requirements being added as a result of Perf work
+  - execution environment (Docker, where the TC client/job runs)
+    - via Dockerfile for Bitbar (https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
+    - via shell scripts for LambdaTest (https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
