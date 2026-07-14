@@ -44,7 +44,7 @@ responsible for host configuration
   - process
     - define the desired host state in Puppet's domain specific language (DSL)
     - apply the Puppet configuration to the host (based on role)
-      - 'roles' correspond to TC worker pools
+      - each role usually corresponds to Taskcluster worker pool
         - for imaging-based workflows, a specific OS and configuration
     - verify configuration via ServerSpec/InSpec tests
       - tests are run at PR merge on GH and Azure VMs, not continuously on production hosts
@@ -58,8 +58,8 @@ our (RelOps) Puppet repository
 
 - Why `ronin`?
   - Japanese, relating to a samurai without a lord or master.
-  - Puppet used to only work with a central server (master).
-  - Masterless is better fit for our fleet management style (and creating cloud images).
+    - Puppet used to only work with a central server (master).
+  - Masterless puppet is better fit for our fleet management style (and creating cloud images).
     - Hosts specify their role vs a server telling them.
     - For creating cloud images, the tool specifies the role the image should have.
 
@@ -68,18 +68,23 @@ our (RelOps) Puppet repository
 
 # How frequently do hosts update their configuration?
 
-- Hosts individually control when they apply the configuration (aka 'converge' on the desired configuration).
+- Hosts control when they apply the configuration.
   - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
   - Windows: When a ronin-puppet change is detected, the host is reimaged and the Puppet configuration is applied. Hosts do not converge in between TC task runs.
+- We can force hosts to update also.
 
 
 ---
 
 # Roles: How hosts determine their configuration
 
-- Mac: TBD
-- Linux: /etc/puppet/role
-- Windows: TBD
+- Mac: /etc/puppet_role
+  - 27 roles in ronin_puppet
+    - e.g. `gecko_t_osx_1500_m4` -> `releng-hardware/gecko-t-osx-1500-m4`
+- Linux: /etc/puppet_role
+  - 6 roles in ronin_puppet
+    - e.g. `gecko_t_linux_2404_talos` -> `releng-hardware/gecko-t-linux-talos-2404`
+- Windows: the PXE server tells hosts their role and serves the appropriate image
 
 ---
 
@@ -124,20 +129,24 @@ our (RelOps) Puppet repository
 
 ---
 
-# Things we monitor, part 1
+# Things we monitor
+
+Part 1
 
 ## Host metics
 - Free disk space
+  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
   - Tascluster generic-worker refuses to work below a specified threshold
-  - We also have Icinga monitoring. TODO:link
+- TC g-w binary running
+  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
 - Performance (CPU)
   - Not yet, but planned. See Fleetbench.  
-- TC g-w binary running
-  - Checked in Icinga TODO: link
 
 ---
 
-# Things we monitor, part 2
+# Things we monitor
+
+Part 2
 
 ## TC worker pool metrics
 
@@ -152,9 +161,9 @@ our (RelOps) Puppet repository
 
 ---
 
-# How much time does it take to deploy a configuration change?, part 1
+# How much time does it take to deploy a configuration change?
 
-## Mac/Linux Process
+ Mac/Linux Process
 
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
@@ -184,10 +193,11 @@ details/caveats on timing:
 
 ---
 
-# How much time does it take to deploy a configuration change?, part 2
+# How much time does it take to deploy a configuration change?
 
-## Windows
-- TBD
+Windows
+
+TBD
 
 ---
 
@@ -196,8 +206,8 @@ details/caveats on timing:
 and their Docker environments
 
   - hosts (phones): mostly vendor-managed but some things can be configured in our startup scripts
-    - requirements document (focuses on infra mostly vs devices): https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit
-    - new requirements being added as a result of Perf work
+    - requirements document: https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit
+      - new requirements continue to be added
   - execution environment (Docker, where the TC client/job runs)
     - via Dockerfile for Bitbar (https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
     - via shell scripts for LambdaTest (https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
