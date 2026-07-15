@@ -6,6 +6,8 @@ Initially focusing on how we deploy our hardware platforms.
 
 ## Viewing and Development
 
+View the [deployed static presentation](https://mozilla-platform-ops.github.io/presentations/drafts/2026-hardware-platform-configuration-managment-overview/#/1).
+
 The slides are in Markdown format, so if you just want to read the content, open `slides.md` directly.
 
 For the rich presentation viewer, use Slidev.
