@@ -27,78 +27,87 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 # How do we configure our hardware hosts?
 
-- Mac: Puppet (ronin-puppet)
-- Linux: Puppet (ronin-puppet)
-- Windows: Puppet (ronin-puppet)
-- Android:
-  - requirements doc for android hardware testing vendors (infrastructure and devices): LINK INCOMING
-  - hosts (phones): vendor-managed
-    - effort to codify requirements for hosts: JIRA LINK INCOMING
-  - execution environment
-    - via Dockerfile for Bitbar
-    - via shell scripts for LambdaTest
+TLDR: Puppet
+
+- Mac/Linux
+  - Flash the base OS and then run Puppet.
+- Windows
+  - Flash an image created with Puppet.
+- Android
+  - Basically shell scripts. See [Slide 15](/15)
 
 ---
 
-# Puppet/OpenVox
+# Puppet
+
+responsible for host configuration
 
 - Puppet: define state and then make host match
   - process
     - define the desired host state in Puppet's domain specific language (DSL)
-    - run Puppet to make the host match the desired configuration
-  - links
-    - https://www.puppet.com/
-    - https://voxpupuli.org/openvox/
-- OpenVox is a free opensource fork of Puppet.
-  - Puppet was recently acquired by Perforce and license was changed.
-- RelOps' Puppet repository: https://github.com/mozilla-platform-ops/ronin_puppet
+    - apply the Puppet configuration to the host (based on role)
+      - each role usually corresponds to Taskcluster worker pool
+        - for imaging-based workflows, a specific OS and configuration
+    - verify configuration via ServerSpec/InSpec tests
+      - tests are run at PR merge on GH and Azure VMs, not continuously on production hosts
+
 
 ---
 
 # Ronin Puppet
 
-- Why `ronin` (masterless) Puppet?
-  - Masterless puppet used to be the default.
-    - Hosts would check in with coordination server regularly.
-  - Masterless is better fit for our fleet management style (and creating cloud VMs).
-- Desired state is verified via ServerSpec/InSpec tests.
-  - Tests are run at PR merge on VMs, not continuously on production hosts.
+our (RelOps) Puppet git repository
+
+- Why `ronin`?
+  - Japanese, relating to a samurai without a lord or master.
+    - Puppet used to only work with a central server (master).
+  - Masterless puppet is better fit for our fleet management style (and creating cloud images).
+    - Hosts specify their role vs a server telling them.
+    - For creating cloud images, the tool specifies the role the image should have.
+- Repo is at https://github.com/mozilla-platform-ops/ronin_puppet.
 
 ---
 
 # How frequently do hosts update their configuration?
 
-- Hosts individually control when they apply the configuration (aka 'converge' on the desired configuration).
+- Hosts control when they apply the configuration.
   - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
   - Windows: When a ronin-puppet change is detected, the host is reimaged and the Puppet configuration is applied. Hosts do not converge in between TC task runs.
+- We can force hosts to update also.
 
 
 ---
 
-# Roles: How hosts determine their configuration
+# How do hosts determine the configuration to use?
 
-- Mac: TBD
-- Linux: /etc/puppet/role
-- Windows: TBD
+- Puppet roles.
+  - Each role maps to a file in ronin-puppet.
+    - https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles
+  - Each role maps to a TC worker type.
+- Mac/Linux: We place a file specifying which role (/etc/puppet_role)
+  - 27 Mac and 6 Linux roles in ronin_puppet
+  - e.g. `gecko_t_linux_2404_talos` -> `releng-hardware/gecko-t-linux-talos-2404`
+  - e.g. `gecko_t_osx_1500_m4` -> `releng-hardware/gecko-t-osx-1500-m4`
+- Windows: the PXE server maps each host's MAC address to a role
 
 ---
 
 # What is disabled on the hosts?
 
-- Generally:
-  - If it's been disabled in the past, we usually will disable it in future platform versions (Ubuntu 22.04 -> 24.04).
-  - If someone asks for something to be disabled, we will usually disable it.
+- Generally,
+  - if it's been disabled in the past, we usually will disable it in future platform versions.
+    - e.g. Ubuntu 22.04 -> 24.04
+  - if someone asks for something to be disabled, we will usually disable it.
 - In the past, we've tried to keep systems 'user-like'.
   - We wouldn't fully strip the systems services. We were told more user-like was the goal.
-- Going forward, we're open to whatever is desired (e.g. more barebones stripped-down systems and also user-like systems)
-  - alternate configurations are additional overhead for us manage/test/update
-  - splits pool resources also
+- Going forward, we're open to whatever is desired (e.g. more barebones stripped-down systems and also user-like systems).
+  - Alternate configurations do add additional overhead for us manage/test/update and they split up resources.
 
 ---
 
 # Can I get screen sharing or shell access?
 
-- Generally, yes.
+- Yes.
   - SSH/Shell: yes
   - Screen sharing/VNC/RDC: yes
 - Considerations
@@ -124,20 +133,24 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 ---
 
-# Things we monitor, part 1
+# Things we monitor
+
+Part 1
 
 ## Host metics
 - Free disk space
+  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
   - Tascluster generic-worker refuses to work below a specified threshold
-  - We also have Icinga monitoring. TODO:link
+- TC g-w binary running
+  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
 - Performance (CPU)
   - Not yet, but planned. See Fleetbench.  
-- TC g-w binary running
-  - Checked in Icinga TODO: link
 
 ---
 
-# Things we monitor, part 2
+# Things we monitor
+
+Part 2
 
 ## TC worker pool metrics
 
@@ -152,9 +165,9 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 ---
 
-# How much time does it take to deploy a configuration change?, part 1
+# How much time does it take to deploy a configuration change?
 
-## Mac/Linux Process
+ Mac/Linux Process
 
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
@@ -184,15 +197,21 @@ details/caveats on timing:
 
 ---
 
-# How much time does it take to deploy a configuration change?, part 2
+# How much time does it take to deploy a configuration change?
 
-## Windows
-- TBD
+Windows
+
+TBD
 
 ---
 
-# Android
+# How do we configure our Android phones?
 
-- TBD
-  - Bitbar
-  - Lambdatest
+and their Docker environments
+
+  - hosts (phones): mostly vendor-managed but some things can be configured in our startup scripts
+    - requirements document: https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit
+      - new requirements continue to be added
+  - execution environment (Docker, where the TC client/job runs)
+    - via Dockerfile for Bitbar (https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
+    - via shell scripts for LambdaTest (https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
