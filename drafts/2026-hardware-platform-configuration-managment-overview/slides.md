@@ -1,9 +1,9 @@
 ---
 theme: default
-title: hardware platform configuration managment overview
+title: hardware platform configuration management overview
 ---
 
-# hardware platform configuration managment overview
+# hardware platform configuration management overview
 Mozilla Release Operations team<br>
 https://github.com/mozilla-platform-ops/presentations/
 
@@ -32,7 +32,8 @@ TLDR: Puppet
 - Mac/Linux
   - Flash the base OS and then run Puppet.
 - Windows
-  - Flash an image created with Puppet.
+  - Image deployments, locked to a specific ronin_puppet commit.
+    - Matches the configuration method of the Azure workers.
 - Android
   - Basically shell scripts. See [Slide 15](/15)
 
@@ -72,7 +73,9 @@ our (RelOps) Puppet git repository
 
 - Hosts control when they apply the configuration.
   - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
-  - Windows: When a ronin-puppet change is detected, the host is reimaged and the Puppet configuration is applied. Hosts do not converge in between TC task runs.
+  - Windows: Configuration is locked to a ronin_puppet commit until the pool's data changes. Hosts do not converge in between TC task runs.
+    - Checks for configuration details on image deployment, then every 2 hours after.
+      - Redeploys itself when idle, or on the next reboot after task completion.
 - We can force hosts to update also.
 
 
@@ -88,7 +91,9 @@ our (RelOps) Puppet git repository
   - 27 Mac and 6 Linux roles in ronin_puppet
   - e.g. `gecko_t_linux_2404_talos` -> `releng-hardware/gecko-t-linux-talos-2404`
   - e.g. `gecko_t_osx_1500_m4` -> `releng-hardware/gecko-t-osx-1500-m4`
-- Windows: the PXE server maps each host's MAC address to a role
+- Windows: the worker reads its configuration from the per-pool source of truth file, starting at image deployment.
+  - https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml
+  - Each pool lists its nodes and pins a `hash` (ronin_puppet commit).
 
 ---
 
@@ -110,6 +115,7 @@ our (RelOps) Puppet git repository
 - Yes.
   - SSH/Shell: yes
   - Screen sharing/VNC/RDC: yes
+    - Windows: available on request; not enabled/installed in the default config.
 - Considerations
   - If you're going to be changing things, we usually want to put the host into a dedicated pool.
   - If you're going to change things, we will usually reimage and redeploy the host when done.
@@ -122,11 +128,17 @@ our (RelOps) Puppet git repository
 
 # Are the perf workers self-checked regularly?
 
-- `self-checked`... no.
+- Mac/Linux: `self-checked`... no.
   - There isn't a process that runs on the hosts that performs checks and removes worker from TC pool.
     - We could get there, but not yet.
     - Should be cautious.
       - e.g. If the entire fleet decides it's not healthy incorrectly, we could end up with no workers.
+- Windows: yes.
+  - Self-checks its configuration, plus other checks:
+    - screen resolution / refresh rate
+    - generic-worker is running
+    - among others
+  - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
 - We do monitor a bunch of things... see next slides.
 - Tell us more about this question.
   - What do you want?
@@ -201,7 +213,16 @@ details/caveats on timing:
 
 Windows
 
-TBD
+- create PR (1 hour, can vary)
+- test PR (1 hour, can vary)
+  - automated PR testing (1 hour)
+  - (optional) manual testing (varies)
+  - try push verification (~2 hours)
+- review and merge PR (1 hour)
+- deploy PR (0 to 2 hours)
+  - bump the pool `hash` in `pools.yml`; worker picks up the change and redeploys.
+  - if needed, an immediate redeployment of all workers in a pool can be forced.
+- total: optimal case: 6 hours or less
 
 ---
 
