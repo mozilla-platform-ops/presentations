@@ -29,10 +29,12 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 TLDR: Puppet
 
-- Mac: Puppet (flash OS and then run ronin-puppet)
-- Linux: Puppet (flash OS and then run ronin-puppet)
-- Windows: Puppet (flash an image created with ronin-puppet)
-- Android: it's complicated... see [Slide 15](/15)
+- Mac/Linux
+  - Flash the base OS and then run Puppet.
+- Windows
+  - Flash an image created with Puppet.
+- Android
+  - Basically shell scripts. See [Slide 15](/15)
 
 ---
 
@@ -54,7 +56,7 @@ responsible for host configuration
 
 # Ronin Puppet
 
-our (RelOps) Puppet repository
+our (RelOps) Puppet git repository
 
 - Why `ronin`?
   - Japanese, relating to a samurai without a lord or master.
@@ -62,7 +64,7 @@ our (RelOps) Puppet repository
   - Masterless puppet is better fit for our fleet management style (and creating cloud images).
     - Hosts specify their role vs a server telling them.
     - For creating cloud images, the tool specifies the role the image should have.
-
+- Repo is at https://github.com/mozilla-platform-ops/ronin_puppet.
 
 ---
 
@@ -76,34 +78,36 @@ our (RelOps) Puppet repository
 
 ---
 
-# Roles: How hosts determine their configuration
+# How do hosts determine the configuration to use?
 
-- Mac: /etc/puppet_role
-  - 27 roles in ronin_puppet
-    - e.g. `gecko_t_osx_1500_m4` -> `releng-hardware/gecko-t-osx-1500-m4`
-- Linux: /etc/puppet_role
-  - 6 roles in ronin_puppet
-    - e.g. `gecko_t_linux_2404_talos` -> `releng-hardware/gecko-t-linux-talos-2404`
-- Windows: the PXE server tells hosts their role and serves the appropriate image
+- Puppet roles.
+  - Each role maps to a file in ronin-puppet.
+    - https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles
+  - Each role maps to a TC worker type.
+- Mac/Linux: We place a file specifying which role (/etc/puppet_role)
+  - 27 Mac and 6 Linux roles in ronin_puppet
+  - e.g. `gecko_t_linux_2404_talos` -> `releng-hardware/gecko-t-linux-talos-2404`
+  - e.g. `gecko_t_osx_1500_m4` -> `releng-hardware/gecko-t-osx-1500-m4`
+- Windows: the PXE server maps each host's MAC address to a role
 
 ---
 
 # What is disabled on the hosts?
 
-- Generally:
-  - If it's been disabled in the past, we usually will disable it in future platform versions (Ubuntu 22.04 -> 24.04).
-  - If someone asks for something to be disabled, we will usually disable it.
+- Generally,
+  - if it's been disabled in the past, we usually will disable it in future platform versions.
+    - e.g. Ubuntu 22.04 -> 24.04
+  - if someone asks for something to be disabled, we will usually disable it.
 - In the past, we've tried to keep systems 'user-like'.
   - We wouldn't fully strip the systems services. We were told more user-like was the goal.
-- Going forward, we're open to whatever is desired (e.g. more barebones stripped-down systems and also user-like systems)
-  - alternate configurations are additional overhead for us manage/test/update
-  - splits pool resources also
+- Going forward, we're open to whatever is desired (e.g. more barebones stripped-down systems and also user-like systems).
+  - Alternate configurations do add additional overhead for us manage/test/update and they split up resources.
 
 ---
 
 # Can I get screen sharing or shell access?
 
-- Generally, yes.
+- Yes.
   - SSH/Shell: yes
   - Screen sharing/VNC/RDC: yes
 - Considerations
