@@ -33,7 +33,6 @@ TLDR: Puppet
   - Flash the base OS and then run Puppet.
 - Windows
   - Image deployments, locked to a specific ronin_puppet commit.
-    - Matches the configuration method of the Azure workers.
 - Android
   - Basically shell scripts. See [Slide 15](/15)
 
@@ -94,6 +93,9 @@ our (RelOps) Puppet git repository
 - Windows: the worker reads its configuration from the per-pool source of truth file, starting at image deployment.
   - https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml
   - Each pool lists its nodes and pins a `hash` (ronin_puppet commit).
+  - 2 main Windows TC pools, each mapping to a ronin_puppet role:
+    - e.g. `win116424h2hw` -> `win11-64-24h2-hw`
+    - e.g. `win116424h2hwref` -> `win11-64-24h2-hw-ref`
 
 ---
 
@@ -137,7 +139,6 @@ our (RelOps) Puppet git repository
   - Self-checks its configuration, plus other checks:
     - screen resolution / refresh rate
     - generic-worker is running
-    - among others
   - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
 - We do monitor a bunch of things... see next slides.
 - Tell us more about this question.
