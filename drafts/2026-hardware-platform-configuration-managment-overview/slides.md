@@ -13,11 +13,11 @@ https://github.com/mozilla-platform-ops/presentations/
   - How are they configured? [Slides 3-5](/3)
   - How frequently is the configuration deployed? [Slide 6](/6)
   - How often are they refreshed or reimaged? [Slide 6](/6)
-  - What do we enable vs not enable? [Slide 8](/8)
-  - If we want to log into a worker with screen sharing is it possible? [Slide 9](/9)
+  - What do we enable vs not enable? [Slide 9](/9)
+  - If we want to log into a worker with screen sharing is it possible? [Slide 10](/10)
     - What about SSH/Shell?
-  - Are the perf workers self-checked regularly? [Slide 10](/10)
-  - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
+  - Are the perf workers self-checked regularly? [Slide 11](/11)
+  - How much time does it take to deploy a configuration change? [Slides 14-15](/14)
 
 <!--
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
@@ -34,7 +34,7 @@ TLDR: Puppet
 - Windows
   - Image deployments, locked to a specific ronin_puppet commit.
 - Android
-  - Basically shell scripts. See [Slide 15](/15)
+  - Basically shell scripts. See [Slide 16](/16)
 
 ---
 
@@ -82,20 +82,31 @@ our (RelOps) Puppet git repository
 
 # How do hosts determine the configuration to use?
 
+Mac/Linux
+
 - Puppet roles.
   - Each role maps to a file in ronin-puppet.
     - https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles
   - Each role maps to a TC worker type.
-- Mac/Linux: We place a file specifying which role (/etc/puppet_role)
+- We place a file specifying which role (/etc/puppet_role)
   - 27 Mac and 6 Linux roles in ronin_puppet
   - e.g. `gecko_t_linux_2404_talos` -> `releng-hardware/gecko-t-linux-talos-2404`
   - e.g. `gecko_t_osx_1500_m4` -> `releng-hardware/gecko-t-osx-1500-m4`
-- Windows: the worker reads its configuration from the per-pool source of truth file, starting at image deployment.
+
+---
+
+# How do hosts determine the configuration to use?
+
+Windows
+
+- Puppet roles.
+  - Each role maps to a TC worker type.
+- The worker reads its configuration from the per-pool source of truth file, starting at image deployment.
   - https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml
   - Each pool lists its nodes and pins a `hash` (ronin_puppet commit).
-  - 2 main Windows TC pools, each mapping to a ronin_puppet role:
-    - e.g. `win116424h2hw` -> `win11-64-24h2-hw`
-    - e.g. `win116424h2hwref` -> `win11-64-24h2-hw-ref`
+- 2 main Windows TC pools, each mapping to a ronin_puppet role:
+  - e.g. `win116424h2hw` -> `win11-64-24h2-hw`
+  - e.g. `win116424h2hwref` -> `win11-64-24h2-hw-ref`
 
 ---
 
