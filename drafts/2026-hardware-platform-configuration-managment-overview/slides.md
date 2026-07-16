@@ -141,19 +141,22 @@ Windows
 
 # Are the perf workers self-checked regularly?
 
-- Mac/Linux: `self-checked`... no.
-  - There isn't a process that runs on the hosts that performs checks and removes worker from TC pool.
-    - We could get there, but not yet.
-    - Should be cautious.
-      - e.g. If the entire fleet decides it's not healthy incorrectly, we could end up with no workers.
-- Windows: yes.
-  - Self-checks its configuration, plus other checks:
-    - screen resolution / refresh rate
-    - generic-worker is running
-  - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
-- We do monitor a bunch of things... see next slides.
+- Yes, we have checks will make the worker not register with TC.
+  - Mac/Linux
+    - Linux: Puppet apply success (Mac runs at startup, but doesn't gate on success).
+    - Free disk space (10GB Linux, 20GB Mac).
+  - Windows
+    - Self-checks its configuration, plus other checks:
+      - screen resolution / refresh rate
+      - generic-worker is running
+    - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
+- We monitor things externally also. See next slide.
+
+<!--
 - Tell us more about this question.
   - What do you want?
+-->
+
 
 ---
 
