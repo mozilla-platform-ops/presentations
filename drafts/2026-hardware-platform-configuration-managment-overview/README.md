@@ -16,11 +16,19 @@ For the rich presentation viewer, use Slidev.
 
 Install Bun:
 
+macOS/Linux:
+
 ```bash
 curl -fsSL https://bun.sh/install | bash
 ```
 
-After installation, restart your shell or source your shell profile so `bun` is on your `PATH`.
+Windows (PowerShell):
+
+```powershell
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
+
+After installation, restart your shell (or source your shell profile on macOS/Linux) so `bun` is on your `PATH`.
 
 ```bash
 bun --version
