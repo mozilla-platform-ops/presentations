@@ -91,14 +91,14 @@ TLDR: Puppet
 
 # What is disabled on the hosts?
 
+- We can support either user-like or stripped-down systems.
+  - Each alternate configuration adds overhead to manage, test, and update, and splits resources.
 - Generally,
   - if it's been disabled in the past, we usually will disable it in future platform versions.
     - e.g. Ubuntu 22.04 -> 24.04
   - if someone asks for something to be disabled, we will usually disable it.
 - In the past, we've tried to keep systems 'user-like'.
   - We wouldn't fully strip the systems services. We were told more user-like was the goal.
-- Going forward, we're open to whatever is desired (e.g. more barebones stripped-down systems and also user-like systems).
-  - Alternate configurations do add additional overhead for us manage/test/update and they split up resources.
 
 ---
 
@@ -174,7 +174,7 @@ Part 2
 
 # How much time does it take to deploy a configuration change?
 
- Mac and Linux
+Mac and Linux — ≤4 hours in the optimal case
 
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
@@ -184,7 +184,6 @@ Part 2
 - deploy PR (1 hour, can vary)
   - pools with fewer tasks can take longer, but next task will always pick up the change.
     - manual Puppet run can be done if absolutely necessary.
-- total: optimal case: 4 hours or less
 
 <!--
 
@@ -206,7 +205,7 @@ details/caveats on timing:
 
 # How much time does it take to deploy a configuration change?
 
-Windows
+Windows — ≤6 hours in the optimal case
 
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
@@ -217,8 +216,6 @@ Windows
 - deploy PR (0 to 2 hours)
   - bump the pool `hash` in `pools.yml`; worker picks up the change and redeploys.
   - if needed, an immediate redeployment of all workers in a pool can be forced.
-- total: optimal case: 6 hours or less
-
 ---
 
 # Android: a different configuration model
@@ -238,6 +235,7 @@ and their Docker environments
 
 - Contact Info
   - Slack: #relops
+  - Loaner requests: https://mozilla-hub.atlassian.net/wiki/x/AQDvpw
 - Links
   - confluence: https://mozilla-hub.atlassian.net/wiki/spaces/ROPS/overview
   - grafana dashboards: https://yardstick.mozilla.org/dashboards/f/edtgaia1z6waoe
