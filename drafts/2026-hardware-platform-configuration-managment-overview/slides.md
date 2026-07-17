@@ -200,7 +200,7 @@ Puppet is the primary configuration system, with a different deployment model fo
       - screen resolution / refresh rate
       - generic-worker is running
     - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
-- We monitor more things, just non-gating metrics or external sources. See the next slides.
+- These are only the checks that gate worker registration. We also collect additional non-gating metrics from the hosts and external sources; the next slides cover those.
 
 <!--
 Ask the audience: what specifically do they want to know about self-checks?
