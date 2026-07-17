@@ -309,6 +309,8 @@ Vendor-managed devices, RelOps-managed execution environments
 - Links
   - [Confluence](https://mozilla-hub.atlassian.net/wiki/spaces/ROPS/overview)
   - [Grafana dashboards](https://yardstick.mozilla.org/dashboards/f/edtgaia1z6waoe)
+  - [pool classifier](https://pool-classifier.relops.mozilla.com/)
+  - [Hangar](https://hangar.relops.mozilla.com/)
   - [mozilla-platform-ops on GitHub](https://github.com/mozilla-platform-ops/)
     - [ronin_puppet](https://github.com/mozilla-platform-ops/ronin_puppet)
     - [fleetbench](https://github.com/mozilla-platform-ops/fleetbench)
