@@ -16,7 +16,7 @@ https://github.com/mozilla-platform-ops/presentations/
   - What do we enable vs not enable? [Slide 9](/9)
   - If we want to log into a worker with screen sharing is it possible? [Slide 10](/10)
     - What about SSH/Shell?
-  - Are the perf workers self-checked regularly? [Slide 11](/11)
+  - Are the workers self-checked regularly? [Slide 11](/11)
   - How much time does it take to deploy a configuration change? [Slides 14-15](/14)
 
 <!--
@@ -139,9 +139,9 @@ Windows
 
 ---
 
-# Are the perf workers self-checked regularly?
+# Are the workers self-checked regularly?
 
-- Yes, we have checks will make the worker not register with TC.
+- Yes, we have checks will make the worker not register with Taskcluster.
   - Mac/Linux
     - Linux: Puppet apply success (Mac runs at startup, but doesn't gate on success).
     - Free disk space (10GB Linux, 20GB Mac).
@@ -150,7 +150,7 @@ Windows
       - screen resolution / refresh rate
       - generic-worker is running
     - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
-- We monitor things externally also. See next slide.
+- We monitor more things, just non-gating metrics or external sources. See the next slides.
 
 <!--
 - Tell us more about this question.
@@ -165,13 +165,14 @@ Windows
 Part 1
 
 ## Host metics
-- Free disk space
-  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
-  - Tascluster generic-worker refuses to work below a specified threshold
-- TC g-w binary running
-  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
-- Performance (CPU)
-  - Not yet, but planned. See Fleetbench.  
+- Collected via Icinga, pushed to Influx, and displayed in Grafana.
+  - free disk space
+  - Taskcluster generic-worker binary state
+  - CPU performance
+  - view at https://yardstick.mozilla.org/dashboards/f/cffmfl1sfr1moe/fxci-hardware-workers
+- Future
+  - We're working on rolling out more device benchmarking.
+    - Currently just CPU performance on Windows.
 
 ---
 
@@ -179,22 +180,22 @@ Part 1
 
 Part 2
 
-## TC worker pool metrics
+## Taskcluster metrics
 
-
-- TC running worker count
-  - Counts are logged in Prometheus and displayed/alerted on in Grafana.
-    - Checks for some android pools. Rolling out to other infra.
-- TC Queue task counts
-  - Counts are logged in Prometheus and displayed/alerted on in Grafana.
-    - Currently only on android queues. Rolling out to more soon.
-
+- Logged in Prometheus and displayed and alerted on in Grafana.
+  - Main Dashboard: https://yardstick.mozilla.org/goto/dfsbwlyi76l8gb?orgId=1
+    - worker metrics: active, running, and quarantined workers
+    - queue metrics: task counts
+  - Alerts are mostly for android pools currently.
+    - https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1
+- Future
+  - Pool Classifier (https://pool-classifier.relops.mozilla.com/) calculates worker and worker pool success rates. Could start graphing and alerting in Grafana.
 
 ---
 
 # How much time does it take to deploy a configuration change?
 
- Mac/Linux Process
+ Mac and Linux
 
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
@@ -251,3 +252,15 @@ and their Docker environments
   - execution environment (Docker, where the TC client/job runs)
     - via Dockerfile for Bitbar (https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
     - via shell scripts for LambdaTest (https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
+
+---
+
+#  Q&A / Links
+
+- Contact Info
+  - slack: #relops
+- Links
+  - confluence: https://mozilla-hub.atlassian.net/wiki/spaces/ROPS/overview
+  - github: https://github.com/mozilla-platform-ops/
+    - https://github.com/mozilla-platform-ops/ronin_puppet
+    - https://github.com/mozilla-platform-ops/fleetbench
