@@ -128,10 +128,10 @@ Puppet is the primary configuration system, with a different deployment model fo
 - Puppet roles.
   - Each role maps to a Taskcluster (TC) worker type.
 - The worker reads it's role from `/etc/puppet_role` on every Puppet run.
-    - Role -> Role File -> TC worker pool
+    - Role -> Role file -> TC worker pool
       - <span style="font-size: .8em"><code>gecko_t_linux_2404_talos</code> -> <code>gecko_t_linux_2404_talos.pp</code> -> <code>releng-hardware/gecko-t-linux-talos-2404</code></span>
       - <span style="font-size: .8em"><code>gecko_t_osx_1500_m4</code> -> <code>gecko_t_osx_1500_m4.pp</code> -> <code>releng-hardware/gecko-t-osx-1500-m4</code></span>
-    - [Role files](https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles)
+    - [ronin_puppet Role files](https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles)
       - 27 Mac and 6 Linux roles currently
 
 ---
