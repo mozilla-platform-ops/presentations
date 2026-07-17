@@ -99,7 +99,7 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 Puppet is the primary configuration system, with a different deployment model for each platform.
 
-- Mac/Linux
+- Mac and Linux
   - Deploy a base OS image, then converge with Puppet from `master` (not commit-pinned).
 - Windows
   - Deploy an image created with Puppet and pinned to a specific commit.
@@ -192,9 +192,10 @@ Puppet is the primary configuration system, with a different deployment model fo
 # Are Workers Self-Checked Regularly?
 
 - Yes, we have checks that prevent a worker from registering with Taskcluster.
-  - Mac/Linux
-    - Linux: Puppet apply success (Mac runs at startup, but doesn't gate on success).
-    - Free disk space (10GB Linux, 20GB Mac).
+  - Mac and Linux
+    - Puppet runs on boot (hosts reboot after every job)
+      - Macs run Puppet at startup, but don't gate on success. Linux does gate.
+    - Free disk space (10GB Linux, 20GB Mac) via generic-worker.
   - Windows
     - Self-checks its configuration, plus other checks:
       - screen resolution / refresh rate
