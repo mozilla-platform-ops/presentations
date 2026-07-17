@@ -132,8 +132,7 @@ TLDR: Puppet
 - We monitor more things, just non-gating metrics or external sources. See the next slides.
 
 <!--
-- Tell us more about this question.
-  - What do you want?
+Ask the audience: what specifically do they want to know about self-checks?
 -->
 
 
@@ -231,7 +230,7 @@ and their Docker environments
 
 ---
 
-#  Q&A / Links
+# Q&A / Links
 
 - Contact Info
   - Slack: #relops
