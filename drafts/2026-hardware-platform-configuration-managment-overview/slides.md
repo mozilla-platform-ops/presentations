@@ -84,7 +84,7 @@ title: Hardware Platform Configuration Management
   - How are they configured? [Slides 3-6](/3)
   - How frequently is the configuration deployed? [Slide 7](/7)
   - How often are they refreshed or reimaged? [Slide 7](/7)
-  - What do we enable vs not enable? [Slide 8](/8)
+  - What do we enable or disable? [Slide 8](/8)
   - If we want to log into a worker with SSH or screen sharing is it possible? [Slide 9](/9)
   - Are the workers self-checked regularly? [Slide 10](/10)
   - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
@@ -130,7 +130,7 @@ Puppet is the primary configuration system, with a different deployment model fo
   - <span style="font-size: .8em"><code>gecko_t_linux_2404_talos</code> → <code>gecko_t_linux_2404_talos.pp</code> → <code>releng-hardware/gecko-t-linux-talos-2404</code></span>
   - <span style="font-size: .8em"><code>gecko_t_osx_1500_m4</code> → <code>gecko_t_osx_1500_m4.pp</code> → <code>releng-hardware/gecko-t-osx-1500-m4</code></span>
 - [ronin_puppet Role files](https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles)
-  - 27 Mac and 6 Linux roles currently
+  - Currently, there are 27 Mac roles and 6 Linux roles.
 
 ---
 
@@ -140,7 +140,7 @@ Puppet is the primary configuration system, with a different deployment model fo
 - The worker reads its configuration from the per-pool source of truth file, starting at image deployment.
   - [Windows pool configuration](https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml)
   - Each pool lists its nodes and pins a `hash` (ronin_puppet commit).
-- 2 main Windows TC pools, each mapping to a ronin_puppet role:
+- Two main Windows TC pools, each mapping to a ronin_puppet role:
   - e.g. `win116424h2hw` -> `win11-64-24h2-hw`
   - e.g. `win116424h2hwref` -> `win11-64-24h2-hw-ref`
 
@@ -151,7 +151,7 @@ Puppet is the primary configuration system, with a different deployment model fo
 - Hosts control when they apply the configuration.
   - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
   - Windows: Configuration is locked to a ronin_puppet commit until the pool's data changes. Hosts do not converge in between TC task runs.
-    - Checks for configuration details on image deployment, then every 2 hours after.
+    - It checks for configuration details at image deployment, then every 2 hours.
       - Redeploys itself when idle, or on the next reboot after task completion.
 - We can also force hosts to update.
 
@@ -166,7 +166,7 @@ Puppet is the primary configuration system, with a different deployment model fo
     - e.g. Ubuntu 22.04 -> 24.04
   - if someone asks for something to be disabled, we will usually disable it.
 - In the past, we've tried to keep systems 'user-like'.
-  - We wouldn't fully strip the systems services. We were told more user-like was the goal.
+  - We wouldn't fully strip the system services. We were told more user-like was the goal.
 
 ---
 
@@ -230,12 +230,12 @@ Signals from Taskcluster
 
 ## Taskcluster metrics
 
-- Logged in Prometheus and displayed and alerted on in Grafana.
+- Metrics are logged in Prometheus and displayed and alerted on in Grafana.
   - [RelOps Grafana Workers dashboard](https://yardstick.mozilla.org/goto/dfsbwlyi76l8gb?orgId=1)
     - worker metrics: active, running, and quarantined workers
     - queue metrics: task counts
   - [RelOps Grafana Alerts](https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1)
-    - Alerts are mostly for android pools currently.
+    - Alerts are mostly for Android pools currently.
 - Future
   - [Pool Classifier](https://pool-classifier.relops.mozilla.com/) calculates worker and worker-pool success rates. We could graph and alert on pool success rates and the number of hosts with low success rates in Grafana.
 
@@ -291,7 +291,7 @@ Windows — ≤6 hours in the optimal case
 
 Vendor-managed devices, RelOps-managed execution environments
 
-  - hosts (phones): mostly vendor-managed but some things can be configured in our startup scripts
+  - Hosts (phones) are mostly vendor-managed, but some settings can be configured in our startup scripts.
     - [requirements document](https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit)
       - new requirements continue to be added
   - execution environment (Docker, where the TC client/job runs)
