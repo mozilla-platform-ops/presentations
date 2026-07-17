@@ -218,11 +218,11 @@ Signals from the Host
   - free disk space
   - Taskcluster generic-worker binary state
   - CPU performance
-  - view the [hardware-worker dashboard](https://yardstick.mozilla.org/dashboards/f/cffmfl1sfr1moe/fxci-hardware-workers)
+  - view the [Relops Grafana hardware-worker dashboard](https://yardstick.mozilla.org/dashboards/f/cffmfl1sfr1moe/fxci-hardware-workers)
 - Future
   - We're working on rolling out more device benchmarking.
     - Currently just CPU performance on Windows.
-    - Driven by [fleetbench](https://github.com/mozilla-platform-ops/fleetbench) benchmarking tool
+    - Driven by RelOps' [fleetbench](https://github.com/mozilla-platform-ops/fleetbench) benchmarking tool.
 
 ---
 
@@ -233,11 +233,11 @@ Signals from Taskcluster
 ## Taskcluster metrics
 
 - Logged in Prometheus and displayed and alerted on in Grafana.
-  - Main [Taskcluster dashboard](https://yardstick.mozilla.org/goto/dfsbwlyi76l8gb?orgId=1)
+  - [RelOps Grafana Workers dashboard](https://yardstick.mozilla.org/goto/dfsbwlyi76l8gb?orgId=1)
     - worker metrics: active, running, and quarantined workers
     - queue metrics: task counts
-  - Alerts are mostly for android pools currently.
-    - [Alerts](https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1)
+  - [RelOps Grafana Alerts](https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1)
+    - Alerts are mostly for android pools currently.
 - Future
   - [Pool Classifier](https://pool-classifier.relops.mozilla.com/) calculates worker and worker-pool success rates. We could graph and alert on pool success rates and the number of hosts with low success rates in Grafana.
 
