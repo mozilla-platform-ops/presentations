@@ -285,7 +285,7 @@ Windows — ≤6 hours in the optimal case
   - try push verification (~2 hours)
 - review and merge PR (1 hour)
 - deploy PR (0 to 2 hours)
-  - bump the pool `hash` in `pools.yml`; worker picks up the change and redeploys.
+  - bump the pool `hash` in [pools.yml](https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml); worker picks up the change and redeploys.
   - if needed, an immediate redeployment of all workers in a pool can be forced.
 ---
 
