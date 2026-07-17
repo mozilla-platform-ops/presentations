@@ -14,7 +14,7 @@ https://github.com/mozilla-platform-ops/presentations/
   - How frequently is the configuration deployed? [Slide 7](/7)
   - How often are they refreshed or reimaged? [Slide 7](/7)
   - What do we enable vs not enable? [Slide 8](/8)
-  - If we want to log into a worker with screen sharing is it possible? [Slide 9](/9)
+  - If we want to log into a worker with SSH or screen sharing is it possible? [Slide 9](/9)
   - Are the workers self-checked regularly? [Slide 10](/10)
   - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
 
