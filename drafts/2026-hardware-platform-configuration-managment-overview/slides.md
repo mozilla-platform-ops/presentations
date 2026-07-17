@@ -1,23 +1,95 @@
 ---
 theme: default
-title: hardware platform configuration management overview
+title: Hardware Platform Configuration Management
 ---
 
-# hardware platform configuration management overview
-Mozilla Release Operations team<br>
-https://github.com/mozilla-platform-ops/presentations/
+<div class="title-slide">
+  <div class="title-copy">
+    <h1>Hardware Platform<br>Configuration Management</h1>
+    <p class="subtitle">How RelOps configures, deploys, and monitors its hardware fleet.</p>
+    <p class="title-meta">Release Operations <span>·</span> Mozilla <span>·</span> July 2026</p>
+  </div>
+</div>
+
+<style>
+.slidev-layout:has(.title-slide) {
+  padding: 0;
+}
+.title-slide {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  min-height: 100%;
+  padding: 88px;
+  position: relative;
+  background: #fbfbfd;
+  color: #20123a;
+}
+.title-copy { max-width: 940px; }
+.title-slide h1 {
+  color: #20123a;
+  font-size: 3.1rem;
+  font-weight: 700;
+  letter-spacing: -.055em;
+  line-height: 1.02;
+  margin: 0;
+}
+.title-slide .subtitle {
+  color: #5b5b66;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  margin: 1.5rem 0 0;
+  max-width: 760px;
+}
+.title-slide .title-meta {
+  color: #8a8a94;
+  font-size: .82rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  margin: 2.25rem 0 0;
+  text-transform: uppercase;
+}
+.title-slide .title-meta span {
+  color: #b0b0b8;
+  padding: 0 .35em;
+}
+@media (prefers-color-scheme: dark) {
+  .title-slide,
+  .dark .title-slide {
+    background: #121212;
+    color: #f4f3f7;
+  }
+  .title-slide h1,
+  .dark .title-slide h1 { color: #f4f3f7; }
+  .title-slide .subtitle,
+  .dark .title-slide .subtitle { color: #b8b5bf; }
+  .title-slide .title-meta,
+  .dark .title-slide .title-meta { color: #a7a3ad; }
+  .title-slide .title-meta span,
+  .dark .title-slide .title-meta span { color: #77737d; }
+}
+.dark .title-slide {
+  background: #121212;
+  color: #f4f3f7;
+}
+.dark .title-slide h1 { color: #f4f3f7; }
+.dark .title-slide .subtitle { color: #b8b5bf; }
+.dark .title-slide .title-meta { color: #a7a3ad; }
+.dark .title-slide .title-meta span { color: #77737d; }
+</style>
 
 ---
 
-# Overview / TLDR / Requested questions index
-  - How are they configured? [Slides 3-5](/3)
-  - How frequently is the configuration deployed? [Slide 6](/6)
-  - How often are they refreshed or reimaged? [Slide 6](/6)
-  - What do we enable vs not enable? [Slide 9](/9)
-  - If we want to log into a worker with screen sharing is it possible? [Slide 10](/10)
-    - What about SSH/Shell?
-  - Are the perf workers self-checked regularly? [Slide 11](/11)
-  - How much time does it take to deploy a configuration change? [Slides 14-15](/14)
+# Questions We’ll Answer
+  - How are the hardware hosts configured? [Slides 3-6](/3)
+  - How frequently is the configuration deployed? [Slide 7](/7)
+  - How often are they refreshed or reimaged? [Slide 7](/7)
+  - What do we enable or disable? [Slide 8](/8)
+  - If we want to log into a worker with SSH or screen sharing is it possible? [Slide 9](/9)
+  - Are the workers self-checked regularly? [Slide 10](/10)
+  - What do you monitor? [Slides 11-12](/11)
+  - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
+  - How does Android configuration differ? [Slide 15](/15)
 
 <!--
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
@@ -25,105 +97,82 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 ---
 
-# How do we configure our hardware hosts?
+# How We Configure Hardware Hosts
 
-TLDR: Puppet
+Puppet is the primary configuration system, with a different deployment model for each platform.
 
-- Mac/Linux
-  - Flash the base OS and then run Puppet.
+- Mac and Linux
+  - Deploy a base OS image, then converge with Puppet from `master` (not commit-pinned).
 - Windows
-  - Image deployments, locked to a specific ronin_puppet commit.
+  - Deploy an image created with Puppet and pinned to a specific commit.
 - Android
-  - Basically shell scripts. See [Slide 16](/16)
+  - A separate vendor-managed and script-based model. See [Slide 15](/15)
 
 ---
 
-# Puppet
+# Puppet and ronin_puppet
 
-responsible for host configuration
-
-- Puppet: define state and then make host match
-  - process
-    - define the desired host state in Puppet's domain specific language (DSL)
-    - apply the Puppet configuration to the host (based on role)
-      - each role usually corresponds to Taskcluster worker pool
-        - for imaging-based workflows, a specific OS and configuration
-    - verify configuration via ServerSpec/InSpec tests
-      - tests are run at PR merge on GH and Azure VMs, not continuously on production hosts
-
+- Puppet defines the desired host state and makes the host match it.
+  - We define that state in Puppet's domain specific language (DSL).
+  - Hosts apply configuration based on their Puppet role.
+  - We verify configuration with ServerSpec/InSpec/Facter tests at PR merge on GitHub and Azure VMs.
+- [ronin_puppet](https://github.com/mozilla-platform-ops/ronin_puppet) is our masterless Puppet repository.
+  - In traditional Puppet, hosts receive their role from a central server.
+  - With ronin_puppet, hosts declare their role locally.
+    - This fits our fleet-management model: fleets rather than snowflakes.
+    - It also simplifies image creation.
 
 ---
 
-# Ronin Puppet
+# How Mac/Linux Choose Configuration
 
-our (RelOps) Puppet git repository
-
-- Why `ronin`?
-  - Japanese, relating to a samurai without a lord or master.
-    - Puppet used to only work with a central server (master).
-  - Masterless puppet is better fit for our fleet management style (and creating cloud images).
-    - Hosts specify their role vs a server telling them.
-    - For creating cloud images, the tool specifies the role the image should have.
-- Repo is at https://github.com/mozilla-platform-ops/ronin_puppet.
+- Puppet roles map to Taskcluster (TC) worker types.
+- On every Puppet run, the worker reads its role from `/etc/puppet_role`.
+  - Role → role file → TC worker pool
+  - <span style="font-size: .8em"><code>gecko_t_linux_2404_talos</code> → <code>gecko_t_linux_2404_talos.pp</code> → <code>releng-hardware/gecko-t-linux-talos-2404</code></span>
+  - <span style="font-size: .8em"><code>gecko_t_osx_1500_m4</code> → <code>gecko_t_osx_1500_m4.pp</code> → <code>releng-hardware/gecko-t-osx-1500-m4</code></span>
+- [ronin_puppet Role files](https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles)
+  - Currently, there are 27 Mac roles and 6 Linux roles.
 
 ---
 
-# How frequently do hosts update their configuration?
+# How Windows Choose Configuration
 
-- Hosts control when they apply the configuration.
-  - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
-  - Windows: Configuration is locked to a ronin_puppet commit until the pool's data changes. Hosts do not converge in between TC task runs.
-    - Checks for configuration details on image deployment, then every 2 hours after.
-      - Redeploys itself when idle, or on the next reboot after task completion.
-- We can force hosts to update also.
-
-
----
-
-# How do hosts determine the configuration to use?
-
-Mac/Linux
-
-- Puppet roles.
-  - Each role maps to a file in ronin-puppet.
-    - https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles
-  - Each role maps to a TC worker type.
-- We place a file specifying which role (/etc/puppet_role)
-  - 27 Mac and 6 Linux roles in ronin_puppet
-  - e.g. `gecko_t_linux_2404_talos` -> `releng-hardware/gecko-t-linux-talos-2404`
-  - e.g. `gecko_t_osx_1500_m4` -> `releng-hardware/gecko-t-osx-1500-m4`
-
----
-
-# How do hosts determine the configuration to use?
-
-Windows
-
-- Puppet roles.
-  - Each role maps to a TC worker type.
+- Puppet roles map to Taskcluster (TC) worker types.
 - The worker reads its configuration from the per-pool source of truth file, starting at image deployment.
-  - https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml
+  - [Windows pool configuration](https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml)
   - Each pool lists its nodes and pins a `hash` (ronin_puppet commit).
-- 2 main Windows TC pools, each mapping to a ronin_puppet role:
+- Two main Windows TC pools, each mapping to a ronin_puppet role:
   - e.g. `win116424h2hw` -> `win11-64-24h2-hw`
   - e.g. `win116424h2hwref` -> `win11-64-24h2-hw-ref`
 
 ---
 
-# What is disabled on the hosts?
+# How Frequently Hosts Update Configuration
 
+- Hosts control when they apply the configuration.
+  - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
+  - Windows: Configuration is locked to a ronin_puppet commit until the pool's data changes. Hosts do not converge in between TC task runs.
+    - It checks for configuration details at image deployment, then every 2 hours.
+      - Redeploys itself when idle, or on the next reboot after task completion.
+- We can also force hosts to update.
+
+---
+
+# What Is Disabled on Hosts?
+
+- We can support either user-like or stripped-down systems.
+  - Each alternate configuration adds overhead to manage, test, and update, and splits resources.
 - Generally,
   - if it's been disabled in the past, we usually will disable it in future platform versions.
     - e.g. Ubuntu 22.04 -> 24.04
   - if someone asks for something to be disabled, we will usually disable it.
 - In the past, we've tried to keep systems 'user-like'.
-  - We wouldn't fully strip the systems services. We were told more user-like was the goal.
-- Going forward, we're open to whatever is desired (e.g. more barebones stripped-down systems and also user-like systems).
-  - Alternate configurations do add additional overhead for us manage/test/update and they split up resources.
+  - We wouldn't fully strip the system services. We were told more user-like was the goal.
 
 ---
 
-# Can I get screen sharing or shell access?
+# Can I Get Screen Sharing or Shell Access?
 
 - Yes.
   - SSH/Shell: yes
@@ -139,59 +188,64 @@ Windows
 
 ---
 
-# Are the perf workers self-checked regularly?
+# Are Workers Self-Checked Regularly?
 
-- Mac/Linux: `self-checked`... no.
-  - There isn't a process that runs on the hosts that performs checks and removes worker from TC pool.
-    - We could get there, but not yet.
-    - Should be cautious.
-      - e.g. If the entire fleet decides it's not healthy incorrectly, we could end up with no workers.
-- Windows: yes.
-  - Self-checks its configuration, plus other checks:
-    - screen resolution / refresh rate
-    - generic-worker is running
-  - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
-- We do monitor a bunch of things... see next slides.
-- Tell us more about this question.
-  - What do you want?
+- Yes, we have checks that prevent a worker from registering with Taskcluster.
+  - Mac and Linux
+    - Puppet runs on boot (hosts reboot after every job)
+      - Macs run Puppet at startup, but don't gate on success. Linux does gate.
+    - Free disk space (10GB Linux, 20GB Mac) via generic-worker.
+  - Windows
+    - Self-checks its configuration, plus other checks:
+      - screen resolution / refresh rate
+      - generic-worker is running
+    - On finding an issue, reboots; if a reboot doesn't resolve it, redeploys itself.
+- These are only the checks that gate worker registration. We also collect additional non-gating metrics from the hosts and external sources; the next slides cover those.
+
+<!--
+Ask the audience: what specifically do they want to know about self-checks?
+-->
+
 
 ---
 
-# Things we monitor
+# Things We Monitor
 
-Part 1
+Signals from the Host
 
-## Host metics
-- Free disk space
-  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
-  - Tascluster generic-worker refuses to work below a specified threshold
-- TC g-w binary running
-  - Icinga monitoring (https://marlin.mozilla.net/icingaweb2/)
-- Performance (CPU)
-  - Not yet, but planned. See Fleetbench.  
+## Host metrics
+- Collected via Icinga, pushed to Influx, and displayed in Grafana.
+  - free disk space
+  - Taskcluster generic-worker binary state
+  - CPU performance
+  - view the [Relops Grafana hardware-worker dashboard](https://yardstick.mozilla.org/dashboards/f/cffmfl1sfr1moe/fxci-hardware-workers)
+- Future
+  - We're working on rolling out more device benchmarking.
+    - Currently just CPU performance on Windows.
+    - Driven by RelOps' [fleetbench](https://github.com/mozilla-platform-ops/fleetbench) benchmarking tool.
 
 ---
 
-# Things we monitor
+# Things We Monitor
 
-Part 2
+Signals from Taskcluster
 
-## TC worker pool metrics
+## Taskcluster metrics
 
-
-- TC running worker count
-  - Counts are logged in Prometheus and displayed/alerted on in Grafana.
-    - Checks for some android pools. Rolling out to other infra.
-- TC Queue task counts
-  - Counts are logged in Prometheus and displayed/alerted on in Grafana.
-    - Currently only on android queues. Rolling out to more soon.
-
+- Metrics are logged in Prometheus and displayed and alerted on in Grafana.
+  - [RelOps Grafana Workers dashboard](https://yardstick.mozilla.org/goto/dfsbwlyi76l8gb?orgId=1)
+    - worker metrics: active, running, and quarantined workers
+    - queue metrics: task counts
+  - [RelOps Grafana Alerts](https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1)
+    - Alerts are mostly for Android pools currently.
+- Future
+  - [Pool Classifier](https://pool-classifier.relops.mozilla.com/) calculates worker and worker-pool success rates. We could graph and alert on pool success rates and the number of hosts with low success rates in Grafana.
 
 ---
 
 # How much time does it take to deploy a configuration change?
 
- Mac/Linux Process
+Mac and Linux — ≤4 hours in the optimal case
 
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
@@ -201,7 +255,6 @@ Part 2
 - deploy PR (1 hour, can vary)
   - pools with fewer tasks can take longer, but next task will always pick up the change.
     - manual Puppet run can be done if absolutely necessary.
-- total: optimal case: 4 hours or less
 
 <!--
 
@@ -223,7 +276,7 @@ details/caveats on timing:
 
 # How much time does it take to deploy a configuration change?
 
-Windows
+Windows — ≤6 hours in the optimal case
 
 - create PR (1 hour, can vary)
 - test PR (1 hour, can vary)
@@ -232,19 +285,39 @@ Windows
   - try push verification (~2 hours)
 - review and merge PR (1 hour)
 - deploy PR (0 to 2 hours)
-  - bump the pool `hash` in `pools.yml`; worker picks up the change and redeploys.
+  - bump the pool `hash` in [pools.yml](https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml); worker picks up the change and redeploys.
   - if needed, an immediate redeployment of all workers in a pool can be forced.
-- total: optimal case: 6 hours or less
+---
+
+# Android: a different configuration model
+
+Vendor-managed devices, RelOps-managed execution environments
+
+- [android hardware device testing requirements
+](https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit) doc
+  - Covers device and infrastructure (including task execution environment) requirements.
+  - Living document. New requirements continue to be added.
+- Device (Android phones) configuration
+  - Mostly vendor-managed per requirements.
+  - We configure a limited set of settings through startup scripts (below).
+- Task execution environment configuration
+  - The Taskcluster client and jobs run in Docker.
+  - The Docker environment is configured in a few ways.
+    - Bitbar: at [Dockerfile](https://github.com/mozilla-platform-ops/mozilla-bitbar-docker) build time and at runtime (via scripts in Docker image)
+    - LambdaTest: at runtime via [shell scripts](https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts) injected in job payload
 
 ---
 
-# How do we configure our Android phones?
+# Q&A / Links
 
-and their Docker environments
-
-  - hosts (phones): mostly vendor-managed but some things can be configured in our startup scripts
-    - requirements document: https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit
-      - new requirements continue to be added
-  - execution environment (Docker, where the TC client/job runs)
-    - via Dockerfile for Bitbar (https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
-    - via shell scripts for LambdaTest (https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
+- Contact Info
+  - Slack: #relops
+  - [Loaner requests](https://mozilla-hub.atlassian.net/wiki/x/AQDvpw)
+- Links
+  - [Confluence](https://mozilla-hub.atlassian.net/wiki/spaces/ROPS/overview)
+  - [Grafana dashboards](https://yardstick.mozilla.org/dashboards/f/edtgaia1z6waoe)
+  - [pool classifier](https://pool-classifier.relops.mozilla.com/)
+  - [Hangar](https://hangar.relops.mozilla.com/)
+  - [mozilla-platform-ops on GitHub](https://github.com/mozilla-platform-ops/)
+    - [ronin_puppet](https://github.com/mozilla-platform-ops/ronin_puppet)
+    - [fleetbench](https://github.com/mozilla-platform-ops/fleetbench)
