@@ -57,7 +57,7 @@ title: Hardware Platform Configuration Management
 
 ---
 
-# Questions we'll answer
+# Questions We’ll Answer
   - How are they configured? [Slides 3-6](/3)
   - How frequently is the configuration deployed? [Slide 7](/7)
   - How often are they refreshed or reimaged? [Slide 7](/7)
@@ -72,9 +72,9 @@ The last comment block of each slide will be treated as slide notes. It will be 
 
 ---
 
-# How do we configure our hardware hosts?
+# How We Configure Hardware Hosts
 
-TLDR: Puppet
+Puppet is the primary configuration system, with a different deployment model for each platform.
 
 - Mac/Linux
   - Deploy a base OS image, then converge with Puppet from `master` (not commit-pinned).
@@ -96,15 +96,15 @@ TLDR: Puppet
 - Ronin Puppet is our masterless Puppet repository.
   - Hosts specify their role rather than receiving it from a central Puppet server.
   - This fits both fleet management and cloud-image creation.
-  - https://github.com/mozilla-platform-ops/ronin_puppet
+  - [ronin_puppet repository](https://github.com/mozilla-platform-ops/ronin_puppet)
 
 ---
 
-# How Mac/Linux choose configuration
+# How Mac/Linux Choose Configuration
 
 - Puppet roles.
   - Each role maps to a file in ronin-puppet.
-    - https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles
+    - [Role manifests](https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles)
   - Each role maps to a TC worker type.
 - We place a file specifying which role (/etc/puppet_role)
   - 27 Mac and 6 Linux roles in ronin_puppet
@@ -113,12 +113,12 @@ TLDR: Puppet
 
 ---
 
-# How Windows choose configuration
+# How Windows Choose Configuration
 
 - Puppet roles.
   - Each role maps to a TC worker type.
 - The worker reads its configuration from the per-pool source of truth file, starting at image deployment.
-  - https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml
+  - [Windows pool configuration](https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml)
   - Each pool lists its nodes and pins a `hash` (ronin_puppet commit).
 - 2 main Windows TC pools, each mapping to a ronin_puppet role:
   - e.g. `win116424h2hw` -> `win11-64-24h2-hw`
@@ -126,7 +126,7 @@ TLDR: Puppet
 
 ---
 
-# How frequently do hosts update their configuration?
+# How Frequently Hosts Update Configuration
 
 - Hosts control when they apply the configuration.
   - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
@@ -137,7 +137,7 @@ TLDR: Puppet
 
 ---
 
-# What is disabled on the hosts?
+# What Is Disabled on Hosts?
 
 - We can support either user-like or stripped-down systems.
   - Each alternate configuration adds overhead to manage, test, and update, and splits resources.
@@ -150,7 +150,7 @@ TLDR: Puppet
 
 ---
 
-# Can I get screen sharing or shell access?
+# Can I Get Screen Sharing or Shell Access?
 
 - Yes.
   - SSH/Shell: yes
@@ -166,7 +166,7 @@ TLDR: Puppet
 
 ---
 
-# Are the workers self-checked regularly?
+# Are Workers Self-Checked Regularly?
 
 - Yes, we have checks that prevent a worker from registering with Taskcluster.
   - Mac/Linux
@@ -186,7 +186,7 @@ Ask the audience: what specifically do they want to know about self-checks?
 
 ---
 
-# Things we monitor
+# Things We Monitor
 
 Part 1
 
@@ -195,27 +195,27 @@ Part 1
   - free disk space
   - Taskcluster generic-worker binary state
   - CPU performance
-  - view at https://yardstick.mozilla.org/dashboards/f/cffmfl1sfr1moe/fxci-hardware-workers
+  - view the [hardware-worker dashboard](https://yardstick.mozilla.org/dashboards/f/cffmfl1sfr1moe/fxci-hardware-workers)
 - Future
   - We're working on rolling out more device benchmarking.
     - Currently just CPU performance on Windows.
 
 ---
 
-# Things we monitor
+# Things We Monitor
 
 Part 2
 
 ## Taskcluster metrics
 
 - Logged in Prometheus and displayed and alerted on in Grafana.
-  - Main Dashboard: https://yardstick.mozilla.org/goto/dfsbwlyi76l8gb?orgId=1
+  - Main [Taskcluster dashboard](https://yardstick.mozilla.org/goto/dfsbwlyi76l8gb?orgId=1)
     - worker metrics: active, running, and quarantined workers
     - queue metrics: task counts
   - Alerts are mostly for android pools currently.
-    - https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1
+    - [Alerts](https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1)
 - Future
-  - Pool Classifier (https://pool-classifier.relops.mozilla.com/) calculates worker and worker pool success rates. Could start graphing and alerting in Grafana.
+  - [Pool Classifier](https://pool-classifier.relops.mozilla.com/) calculates worker and worker pool success rates. Could start graphing and alerting in Grafana.
 
 ---
 
@@ -267,14 +267,14 @@ Windows — ≤6 hours in the optimal case
 
 # Android: a different configuration model
 
-and their Docker environments
+Vendor-managed devices, RelOps-managed execution environments
 
   - hosts (phones): mostly vendor-managed but some things can be configured in our startup scripts
-    - requirements document: https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit
+    - [requirements document](https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit)
       - new requirements continue to be added
   - execution environment (Docker, where the TC client/job runs)
-    - via Dockerfile for Bitbar (https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
-    - via shell scripts for LambdaTest (https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
+    - via [Dockerfile for Bitbar](https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
+    - via [LambdaTest shell scripts](https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
 
 ---
 
@@ -282,10 +282,10 @@ and their Docker environments
 
 - Contact Info
   - Slack: #relops
-  - Loaner requests: https://mozilla-hub.atlassian.net/wiki/x/AQDvpw
+  - [Loaner requests](https://mozilla-hub.atlassian.net/wiki/x/AQDvpw)
 - Links
-  - confluence: https://mozilla-hub.atlassian.net/wiki/spaces/ROPS/overview
-  - grafana dashboards: https://yardstick.mozilla.org/dashboards/f/edtgaia1z6waoe
-  - github: https://github.com/mozilla-platform-ops/
-    - https://github.com/mozilla-platform-ops/ronin_puppet
-    - https://github.com/mozilla-platform-ops/fleetbench
+  - [Confluence](https://mozilla-hub.atlassian.net/wiki/spaces/ROPS/overview)
+  - [Grafana dashboards](https://yardstick.mozilla.org/dashboards/f/edtgaia1z6waoe)
+  - [mozilla-platform-ops on GitHub](https://github.com/mozilla-platform-ops/)
+    - [ronin_puppet](https://github.com/mozilla-platform-ops/ronin_puppet)
+    - [fleetbench](https://github.com/mozilla-platform-ops/fleetbench)
