@@ -280,18 +280,16 @@ Windows — ≤6 hours in the optimal case
 
 Vendor-managed devices, RelOps-managed execution environments
 
-- [android hardware device testing requirements
-](https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit) doc
+- [Android Hardware Device Testing Requirements](https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit)
   - Covers device and infrastructure (including task execution environment) requirements.
-  - Living document. New requirements continue to be added.
+  - Living document; new requirements continue to be added.
 - Device (Android phones) configuration
-  - Mostly vendor-managed per requirements.
-  - We configure a limited set of settings through startup scripts (below).
+  - Mostly vendor-managed; we configure a limited set of device settings through the execution-environment mechanisms described below.
 - Task execution environment configuration
   - The Taskcluster client and jobs run in Docker.
   - The Docker environment is configured in a few ways.
-    - Bitbar: at [Dockerfile](https://github.com/mozilla-platform-ops/mozilla-bitbar-docker) build time and at runtime (via scripts in Docker image)
-    - LambdaTest: at runtime via [shell scripts](https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts) injected in job payload
+    - Bitbar: during [Dockerfile](https://github.com/mozilla-platform-ops/mozilla-bitbar-docker) build and at runtime (via scripts in the Docker image).
+    - LambdaTest: at runtime via [shell scripts](https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts) injected in job payload.
 
 ---
 
