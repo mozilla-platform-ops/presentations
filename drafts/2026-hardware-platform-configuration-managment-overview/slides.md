@@ -81,13 +81,15 @@ title: Hardware Platform Configuration Management
 ---
 
 # Questions We’ll Answer
-  - How are they configured? [Slides 3-6](/3)
+  - How are the hardware hosts configured? [Slides 3-6](/3)
   - How frequently is the configuration deployed? [Slide 7](/7)
   - How often are they refreshed or reimaged? [Slide 7](/7)
   - What do we enable or disable? [Slide 8](/8)
   - If we want to log into a worker with SSH or screen sharing is it possible? [Slide 9](/9)
   - Are the workers self-checked regularly? [Slide 10](/10)
+  - What do you monitor? [Slides 11-12](/11)
   - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
+  - How does Android configuration differ? [Slide 15](/15)
 
 <!--
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
