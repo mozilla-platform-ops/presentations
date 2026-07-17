@@ -154,8 +154,7 @@ Puppet is the primary configuration system, with a different deployment model fo
   - if it's been disabled in the past, we usually will disable it in future platform versions.
     - e.g. Ubuntu 22.04 -> 24.04
   - if someone asks for something to be disabled, we will usually disable it.
-- In the past, we've tried to keep systems 'user-like'.
-  - We wouldn't fully strip the system services. We were told more user-like was the goal.
+- Historically, we've aimed to keep machines broadly user-like, rather than fully stripping system services.
 
 ---
 
