@@ -10,14 +10,13 @@ https://github.com/mozilla-platform-ops/presentations/
 ---
 
 # Questions we'll answer
-  - How are they configured? [Slides 3-5](/3)
-  - How frequently is the configuration deployed? [Slide 6](/6)
-  - How often are they refreshed or reimaged? [Slide 6](/6)
-  - What do we enable vs not enable? [Slide 9](/9)
-  - If we want to log into a worker with screen sharing is it possible? [Slide 10](/10)
-    - What about SSH/Shell?
-  - Are the workers self-checked regularly? [Slide 11](/11)
-  - How much time does it take to deploy a configuration change? [Slides 14-15](/14)
+  - How are they configured? [Slides 3-6](/3)
+  - How frequently is the configuration deployed? [Slide 7](/7)
+  - How often are they refreshed or reimaged? [Slide 7](/7)
+  - What do we enable vs not enable? [Slide 8](/8)
+  - If we want to log into a worker with screen sharing is it possible? [Slide 9](/9)
+  - Are the workers self-checked regularly? [Slide 10](/10)
+  - How much time does it take to deploy a configuration change? [Slides 13-14](/13)
 
 <!--
 The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
@@ -30,59 +29,30 @@ The last comment block of each slide will be treated as slide notes. It will be 
 TLDR: Puppet
 
 - Mac/Linux
-  - Flash the base OS and then run Puppet.
+  - Start from a base OS and then run Puppet.
 - Windows
   - Image deployments, locked to a specific ronin_puppet commit.
 - Android
-  - Basically shell scripts. See [Slide 16](/16)
+  - A separate vendor-managed and script-based model. See [Slide 15](/15)
 
 ---
 
-# Puppet
+# Puppet and ronin_puppet
 
-responsible for host configuration
-
-- Puppet: define state and then make host match
-  - process
-    - define the desired host state in Puppet's domain specific language (DSL)
-    - apply the Puppet configuration to the host (based on role)
-      - each role usually corresponds to Taskcluster worker pool
-        - for imaging-based workflows, a specific OS and configuration
-    - verify configuration via ServerSpec/InSpec tests
-      - tests are run at PR merge on GH and Azure VMs, not continuously on production hosts
-
-
----
-
-# Ronin Puppet
-
-our (RelOps) Puppet git repository
-
-- Why `ronin`?
-  - Japanese, relating to a samurai without a lord or master.
-    - Puppet used to only work with a central server (master).
-  - Masterless puppet is better fit for our fleet management style (and creating cloud images).
-    - Hosts specify their role vs a server telling them.
-    - For creating cloud images, the tool specifies the role the image should have.
-- Repo is at https://github.com/mozilla-platform-ops/ronin_puppet.
+- Puppet defines the desired host state and makes the host match it.
+  - We define that state in Puppet's domain specific language (DSL).
+  - Hosts apply configuration based on their role.
+    - Each role usually corresponds to a Taskcluster worker pool.
+    - For imaging-based workflows, it defines a specific OS and configuration.
+  - We verify configuration with ServerSpec/InSpec tests at PR merge on GitHub and Azure VMs.
+- Ronin Puppet is our masterless Puppet repository.
+  - Hosts specify their role rather than receiving it from a central Puppet server.
+  - This fits both fleet management and cloud-image creation.
+  - https://github.com/mozilla-platform-ops/ronin_puppet
 
 ---
 
-# How frequently do hosts update their configuration?
-
-- Hosts control when they apply the configuration.
-  - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
-  - Windows: Configuration is locked to a ronin_puppet commit until the pool's data changes. Hosts do not converge in between TC task runs.
-    - Checks for configuration details on image deployment, then every 2 hours after.
-      - Redeploys itself when idle, or on the next reboot after task completion.
-- We can force hosts to update also.
-
-
----
-
-# How do hosts determine the configuration to use?
-
-Mac/Linux
+# How Mac/Linux choose configuration
 
 - Puppet roles.
   - Each role maps to a file in ronin-puppet.
@@ -95,9 +65,7 @@ Mac/Linux
 
 ---
 
-# How do hosts determine the configuration to use?
-
-Windows
+# How Windows choose configuration
 
 - Puppet roles.
   - Each role maps to a TC worker type.
@@ -107,6 +75,17 @@ Windows
 - 2 main Windows TC pools, each mapping to a ronin_puppet role:
   - e.g. `win116424h2hw` -> `win11-64-24h2-hw`
   - e.g. `win116424h2hwref` -> `win11-64-24h2-hw-ref`
+
+---
+
+# How frequently do hosts update their configuration?
+
+- Hosts control when they apply the configuration.
+  - Mac and Linux: After every TC task/reboot, the host converges in Puppet. Machines are not regularly reimaged.
+  - Windows: Configuration is locked to a ronin_puppet commit until the pool's data changes. Hosts do not converge in between TC task runs.
+    - Checks for configuration details on image deployment, then every 2 hours after.
+      - Redeploys itself when idle, or on the next reboot after task completion.
+- We can force hosts to update also.
 
 ---
 
@@ -242,7 +221,7 @@ Windows
 
 ---
 
-# How do we configure our Android phones?
+# Android: a different configuration model
 
 and their Docker environments
 
