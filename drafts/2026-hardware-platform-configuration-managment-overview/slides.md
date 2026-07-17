@@ -1,11 +1,59 @@
 ---
 theme: default
-title: hardware platform configuration management overview
+title: Hardware Platform Configuration Management
 ---
 
-# hardware platform configuration management overview
-Mozilla Release Operations team<br>
-https://github.com/mozilla-platform-ops/presentations/
+<div class="title-slide">
+  <div class="title-copy">
+    <h1>Hardware Platform<br>Configuration Management</h1>
+    <p class="subtitle">How RelOps configures, deploys, and monitors its hardware fleet.</p>
+    <p class="title-meta">Release Operations <span>·</span> Mozilla <span>·</span> July 2026</p>
+  </div>
+</div>
+
+<style>
+.slidev-layout:has(.title-slide) {
+  padding: 0;
+}
+.title-slide {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  min-height: 100%;
+  padding: 88px;
+  position: relative;
+  background: #fbfbfd;
+  color: #20123a;
+}
+.title-copy { max-width: 940px; }
+.title-slide h1 {
+  color: #20123a;
+  font-size: 3.1rem;
+  font-weight: 700;
+  letter-spacing: -.055em;
+  line-height: 1.02;
+  margin: 0;
+}
+.title-slide .subtitle {
+  color: #5b5b66;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  margin: 1.5rem 0 0;
+  max-width: 760px;
+}
+.title-slide .title-meta {
+  color: #8a8a94;
+  font-size: .82rem;
+  font-weight: 500;
+  letter-spacing: .06em;
+  margin: 2.25rem 0 0;
+  text-transform: uppercase;
+}
+.title-slide .title-meta span {
+  color: #b0b0b8;
+  padding: 0 .35em;
+}
+</style>
 
 ---
 
