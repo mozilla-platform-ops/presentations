@@ -141,7 +141,7 @@ Windows
 
 # Are the workers self-checked regularly?
 
-- Yes, we have checks will make the worker not register with Taskcluster.
+- Yes, we have checks that prevent a worker from registering with Taskcluster.
   - Mac/Linux
     - Linux: Puppet apply success (Mac runs at startup, but doesn't gate on success).
     - Free disk space (10GB Linux, 20GB Mac).
@@ -164,7 +164,7 @@ Windows
 
 Part 1
 
-## Host metics
+## Host metrics
 - Collected via Icinga, pushed to Influx, and displayed in Grafana.
   - free disk space
   - Taskcluster generic-worker binary state
