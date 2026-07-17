@@ -124,22 +124,20 @@ Puppet is the primary configuration system, with a different deployment model fo
 
 # How Mac/Linux Choose Configuration
 
-- Puppet roles.
-  - Each role maps to a Taskcluster (TC) worker type.
-- The worker reads it's role from `/etc/puppet_role` on every Puppet run.
-    - Role -> Role file -> TC worker pool
-      - <span style="font-size: .8em"><code>gecko_t_linux_2404_talos</code> -> <code>gecko_t_linux_2404_talos.pp</code> -> <code>releng-hardware/gecko-t-linux-talos-2404</code></span>
-      - <span style="font-size: .8em"><code>gecko_t_osx_1500_m4</code> -> <code>gecko_t_osx_1500_m4.pp</code> -> <code>releng-hardware/gecko-t-osx-1500-m4</code></span>
-    - [ronin_puppet Role files](https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles)
-      - 27 Mac and 6 Linux roles currently
+- Puppet roles map to Taskcluster (TC) worker types.
+- On every Puppet run, the worker reads its role from `/etc/puppet_role`.
+  - Role → role file → TC worker pool
+  - <span style="font-size: .8em"><code>gecko_t_linux_2404_talos</code> → <code>gecko_t_linux_2404_talos.pp</code> → <code>releng-hardware/gecko-t-linux-talos-2404</code></span>
+  - <span style="font-size: .8em"><code>gecko_t_osx_1500_m4</code> → <code>gecko_t_osx_1500_m4.pp</code> → <code>releng-hardware/gecko-t-osx-1500-m4</code></span>
+- [ronin_puppet Role files](https://github.com/mozilla-platform-ops/ronin_puppet/tree/master/modules/roles_profiles/manifests/roles)
+  - 27 Mac and 6 Linux roles currently
 
 ---
 
 # How Windows Choose Configuration
 
-- Puppet roles.
-  - Each role maps to a Taskcluster (TC) worker type.
-- The worker reads it's configuration from the per-pool source of truth file, starting at image deployment.
+- Puppet roles map to Taskcluster (TC) worker types.
+- The worker reads its configuration from the per-pool source of truth file, starting at image deployment.
   - [Windows pool configuration](https://github.com/mozilla-platform-ops/worker-images/blob/main/provisioners/windows/MDC1Windows/pools.yml)
   - Each pool lists its nodes and pins a `hash` (ronin_puppet commit).
 - 2 main Windows TC pools, each mapping to a ronin_puppet role:
