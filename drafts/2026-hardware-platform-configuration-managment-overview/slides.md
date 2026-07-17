@@ -29,9 +29,9 @@ The last comment block of each slide will be treated as slide notes. It will be 
 TLDR: Puppet
 
 - Mac/Linux
-  - Start from a base OS and then run Puppet.
+  - Deploy a base OS image, then converge with Puppet from `master` (not commit-pinned).
 - Windows
-  - Image deployments, locked to a specific ronin_puppet commit.
+  - Deploy an image created with Puppet and pinned to a specific commit.
 - Android
   - A separate vendor-managed and script-based model. See [Slide 15](/15)
 
