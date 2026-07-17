@@ -211,7 +211,7 @@ Ask the audience: what specifically do they want to know about self-checks?
 
 # Things We Monitor
 
-Part 1
+Signals from the Host
 
 ## Host metrics
 - Collected via Icinga, pushed to Influx, and displayed in Grafana.
@@ -222,12 +222,13 @@ Part 1
 - Future
   - We're working on rolling out more device benchmarking.
     - Currently just CPU performance on Windows.
+    - Driven by [fleetbench](https://github.com/mozilla-platform-ops/fleetbench) benchmarking tool
 
 ---
 
 # Things We Monitor
 
-Part 2
+Signals from Taskcluster
 
 ## Taskcluster metrics
 
