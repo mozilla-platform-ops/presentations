@@ -112,14 +112,13 @@ Puppet is the primary configuration system, with a different deployment model fo
 
 - Puppet defines the desired host state and makes the host match it.
   - We define that state in Puppet's domain specific language (DSL).
-  - Hosts apply configuration based on their role.
-    - Each role usually corresponds to a Taskcluster worker pool.
-    - For imaging-based workflows, it defines a specific OS and configuration.
-  - We verify configuration with ServerSpec/InSpec tests at PR merge on GitHub and Azure VMs.
-- Ronin Puppet is our masterless Puppet repository.
-  - Hosts specify their role rather than receiving it from a central Puppet server.
-  - This fits both fleet management and cloud-image creation.
-  - [ronin_puppet repository](https://github.com/mozilla-platform-ops/ronin_puppet)
+  - Hosts apply configuration based on their Puppet role.
+  - We verify configuration with ServerSpec/InSpec/Facter tests at PR merge on GitHub and Azure VMs.
+- [ronin_puppet](https://github.com/mozilla-platform-ops/ronin_puppet) is our masterless Puppet repository.
+  - In traditional Puppet, hosts receive their role from a central server.
+  - With ronin_puppet, hosts declare their role locally.
+    - This fits our fleet-management model: fleets rather than snowflakes.
+    - It also simplifies image creation.
 
 ---
 
