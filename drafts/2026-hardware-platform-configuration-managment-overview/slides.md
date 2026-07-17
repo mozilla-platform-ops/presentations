@@ -297,8 +297,8 @@ Vendor-managed devices, RelOps-managed execution environments
     - [requirements document](https://docs.google.com/document/d/1H0oQYkxWBrYQTWb5BFIrShrtcm0_VOB-cSInjLPx-tM/edit)
       - new requirements continue to be added
   - execution environment (Docker, where the TC client/job runs)
-    - via [Dockerfile for Bitbar](https://github.com/mozilla-platform-ops/mozilla-bitbar-docker)
-    - via [LambdaTest shell scripts](https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts)
+    - via [Dockerfile](https://github.com/mozilla-platform-ops/mozilla-bitbar-docker) for Bitbar
+    - via [shell scripts](https://github.com/mozilla-platform-ops/mozilla-bitbar-devicepool/tree/master/mozilla_bitbar_devicepool/lambdatest/user_scripts) for LambdaTest
 
 ---
 
