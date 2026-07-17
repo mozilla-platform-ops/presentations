@@ -239,7 +239,7 @@ Signals from Taskcluster
   - Alerts are mostly for android pools currently.
     - [Alerts](https://yardstick.mozilla.org/goto/efsbwpzz9srnkf?orgId=1)
 - Future
-  - [Pool Classifier](https://pool-classifier.relops.mozilla.com/) calculates worker and worker pool success rates. Could start graphing and alerting in Grafana.
+  - [Pool Classifier](https://pool-classifier.relops.mozilla.com/) calculates worker and worker-pool success rates. We could graph and alert on pool success rates and the number of hosts with low success rates in Grafana.
 
 ---
 
