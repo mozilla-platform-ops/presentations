@@ -9,7 +9,7 @@ https://github.com/mozilla-platform-ops/presentations/
 
 ---
 
-# Overview / TLDR / Requested questions index
+# Questions we'll answer
   - How are they configured? [Slides 3-5](/3)
   - How frequently is the configuration deployed? [Slide 6](/6)
   - How often are they refreshed or reimaged? [Slide 6](/6)
@@ -258,9 +258,10 @@ and their Docker environments
 #  Q&A / Links
 
 - Contact Info
-  - slack: #relops
+  - Slack: #relops
 - Links
   - confluence: https://mozilla-hub.atlassian.net/wiki/spaces/ROPS/overview
+  - grafana dashboards: https://yardstick.mozilla.org/dashboards/f/edtgaia1z6waoe
   - github: https://github.com/mozilla-platform-ops/
     - https://github.com/mozilla-platform-ops/ronin_puppet
     - https://github.com/mozilla-platform-ops/fleetbench
