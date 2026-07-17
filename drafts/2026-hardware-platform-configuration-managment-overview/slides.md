@@ -85,7 +85,7 @@ TLDR: Puppet
   - Windows: Configuration is locked to a ronin_puppet commit until the pool's data changes. Hosts do not converge in between TC task runs.
     - Checks for configuration details on image deployment, then every 2 hours after.
       - Redeploys itself when idle, or on the next reboot after task completion.
-- We can force hosts to update also.
+- We can also force hosts to update.
 
 ---
 
