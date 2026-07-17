@@ -13,13 +13,14 @@ title: Hardware Platform Configuration Management
 
 <style>
 .slidev-layout:has(.title-slide) {
+  background: #fbfbfd;
   padding: 0;
 }
 .title-slide {
   align-items: center;
   box-sizing: border-box;
   display: flex;
-  min-height: 100%;
+  height: 100%;
   padding: 88px;
   position: relative;
   background: #fbfbfd;
@@ -53,21 +54,7 @@ title: Hardware Platform Configuration Management
   color: #b0b0b8;
   padding: 0 .35em;
 }
-@media (prefers-color-scheme: dark) {
-  .title-slide,
-  .dark .title-slide {
-    background: #121212;
-    color: #f4f3f7;
-  }
-  .title-slide h1,
-  .dark .title-slide h1 { color: #f4f3f7; }
-  .title-slide .subtitle,
-  .dark .title-slide .subtitle { color: #b8b5bf; }
-  .title-slide .title-meta,
-  .dark .title-slide .title-meta { color: #a7a3ad; }
-  .title-slide .title-meta span,
-  .dark .title-slide .title-meta span { color: #77737d; }
-}
+.dark .slidev-layout:has(.title-slide) { background: #121212; }
 .dark .title-slide {
   background: #121212;
   color: #f4f3f7;
