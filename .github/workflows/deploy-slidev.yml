@@ -37,6 +37,14 @@ jobs:
       - name: Build Slidev deck
         run: bun run build
 
+      - name: Install cloud worker image deck dependencies
+        working-directory: drafts/2026-cloud-worker-images-brownbag
+        run: bun install
+
+      - name: Build cloud worker image deck
+        working-directory: drafts/2026-cloud-worker-images-brownbag
+        run: bun run build
+
       - name: Assemble Pages site
         run: |
           rm -rf ../../public
@@ -44,6 +52,8 @@ jobs:
           cp -R ../../site/. ../../public/
           mkdir -p ../../public/drafts/2026-hardware-platform-configuration-managment-overview
           cp -R dist/. ../../public/drafts/2026-hardware-platform-configuration-managment-overview/
+          mkdir -p ../../public/drafts/2026-cloud-worker-images-brownbag
+          cp -R ../2026-cloud-worker-images-brownbag/dist/. ../../public/drafts/2026-cloud-worker-images-brownbag/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

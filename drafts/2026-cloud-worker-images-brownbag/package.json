@@ -1,0 +1,15 @@
+{
+  "name": "2026-cloud-worker-images-brownbag",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev --remote --open",
+    "build": "slidev build --base ./ --router-mode hash && node scripts/patch-slidev-pages-build.mjs",
+    "build:local": "slidev build",
+    "export": "slidev export"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^52.16.0",
+    "@slidev/theme-default": "^0.25.0"
+  }
+}
