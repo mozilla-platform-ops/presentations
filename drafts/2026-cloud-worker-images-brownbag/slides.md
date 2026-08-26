@@ -56,7 +56,7 @@ Worker images are part of the Firefox test environment. An image change can chan
 
 <div class="report-flow" style="--columns: 4">
   <section class="report-stage" data-step="01"><h3><code>ronin_puppet</code></h3><p>Defines the Windows OS state, software, policy, and Taskcluster packages.</p></section>
-  <section class="report-stage" data-step="02"><h3><code>worker-images</code></h3><p>Builds the image, runs image tests, and creates the SBOM.</p></section>
+  <section class="report-stage" data-step="02"><h3><code>worker-images</code></h3><p>Defines Linux image configuration and provisioning. Builds and tests both Windows and Linux images.</p></section>
   <section class="report-stage" data-step="03"><h3><code>fxci-config</code></h3><p>Maps each worker pool to a published image version.</p></section>
   <section class="report-stage" data-step="04"><h3>Firefox CI</h3><p>New cloud workers use the image selected for their pool.</p></section>
 </div>
@@ -64,7 +64,7 @@ Worker images are part of the Firefox test environment. An image change can chan
 <p class="source-link">Canonical repositories: <a href="https://github.com/mozilla-platform-ops/ronin_puppet">ronin_puppet</a> · <a href="https://github.com/mozilla-platform-ops/worker-images">worker-images</a> · <a href="https://github.com/mozilla-releng/fxci-config">fxci-config</a></p>
 
 <!--
-These repositories answer different questions: What is in the host? How do we build it? Which version does each pool use?
+Windows OS content starts in ronin_puppet. Linux OS content is defined in worker-images. worker-images builds both platforms, and fxci-config selects the image for each pool.
 -->
 
 ---
@@ -280,26 +280,26 @@ The current jobs copy a curated mozilla-central OS integration task set. RelOps 
 
 ---
 
-# Promotion is one small config change
+# Promotion differs by cloud
 
 <div class="report-flow" style="--columns: 5">
-  <section class="report-stage" data-step="01"><h3>Verify</h3><p>Use the image that passed its build checks.</p></section>
-  <section class="report-stage" data-step="02"><h3>Bind</h3><p>Open the <code>fxci-config</code> PR.</p></section>
-  <section class="report-stage emphasis" data-step="03"><h3>Integrate</h3><p>Run OS integration against the proposed binding.</p></section>
-  <section class="report-stage" data-step="04"><h3>Merge</h3><p>Make the configuration active.</p></section>
-  <section class="report-stage" data-step="05"><h3>Replace</h3><p>New VMs use the new image binding.</p></section>
+  <section class="report-stage" data-step="01"><h3>Qualify</h3><p>Test the alpha image.</p></section>
+  <section class="report-stage" data-step="02"><h3>Promote</h3><p>Build Windows again or copy Linux.</p></section>
+  <section class="report-stage" data-step="03"><h3>Bind</h3><p>Open the <code>fxci-config</code> PR.</p></section>
+  <section class="report-stage emphasis" data-step="04"><h3>Integrate</h3><p>Test the proposed production binding.</p></section>
+  <section class="report-stage" data-step="05"><h3>Deploy</h3><p>Merge. New VMs use the new image.</p></section>
 </div>
 
 <div class="two-col" style="margin-top: 34px">
-  <div class="card"><h3>Windows</h3><p>Change <code>version</code> and <code>deployment_id</code> together.</p></div>
-  <div class="card"><h3>Linux</h3><p>Change the full dated GCE image path for each trust level that moved.</p></div>
+  <div class="card"><h3>Windows rebuilds</h3><p>Packer creates a new production Azure image from the same source revision.</p></div>
+  <div class="card"><h3>Linux copies</h3><p>GCP copies the tested alpha image into production without rebuilding its filesystem.</p></div>
 </div>
 
 <div class="callout">
-  <p>The <code>worker-images.yml</code> diff is the release manifest. Change only artifacts that were built and validated.</p>
+  <p>After either path, the <code>worker-images.yml</code> diff selects the exact production artifact for each worker pool.</p>
 </div>
 
-<p class="source-link">Canonical repository: <a href="https://github.com/mozilla-releng/fxci-config">mozilla-releng/fxci-config</a></p>
+<p class="source-link">Sources: <a href="https://github.com/mozilla-platform-ops/worker-images">worker-images</a> · <a href="https://github.com/mozilla-releng/fxci-config">fxci-config</a></p>
 
 ---
 
@@ -375,24 +375,24 @@ Fewer handoffs: RELOPS-1268, RELOPS-1588, and the RelOps Herald POC in RELOPS-23
 
 ---
 
-# Agent-ready image repositories
+# Coding-agent setup
 
-Claude Code, Codex, and OpenCode are the coding agents we use today. The repository setup is not complete.
+Claude Code, Codex, and OpenCode are the coding agents we use today. All three repositories now use the same instruction pattern.
 
 <div class="surface-grid" style="margin-top: 22px">
-  <div class="card"><h3><code>worker-images</code></h3><p>Has <code>AGENTS.md</code>. Its <code>CLAUDE.md</code> imports the same instructions.</p></div>
-  <div class="card"><h3><code>fxci-config</code></h3><p>Has <code>AGENTS.md</code>. Its <code>CLAUDE.md</code> imports the same instructions.</p></div>
-  <div class="card"><h3><code>ronin_puppet</code></h3><p>Has <code>CLAUDE.md</code>, but no <code>AGENTS.md</code> on the default branch.</p></div>
+  <div class="card"><h3><code>worker-images</code></h3><p><a href="https://github.com/mozilla-platform-ops/worker-images/blob/main/AGENTS.md"><code>AGENTS.md</code></a> covers image builds and rollouts. <code>CLAUDE.md</code> imports it.</p></div>
+  <div class="card"><h3><code>fxci-config</code></h3><p><a href="https://github.com/mozilla-releng/fxci-config/blob/main/AGENTS.md"><code>AGENTS.md</code></a> covers configuration and validation. <code>CLAUDE.md</code> imports it.</p></div>
+  <div class="card"><h3><code>ronin_puppet</code></h3><p><a href="https://github.com/mozilla-platform-ops/ronin_puppet/blob/master/AGENTS.md"><code>AGENTS.md</code></a> covers Puppet structure and tests. <code>CLAUDE.md</code> imports it.</p></div>
 </div>
 
 <div class="callout">
-  <p>The shared <a href="https://github.com/mozilla-platform-ops/agent-skills"><code>production-image-deploy</code> skill</a> is installed separately. Next, add <code>AGENTS.md</code> to <code>ronin_puppet</code>, link the shared skills, and keep the release rules current.</p>
+  <p>The base setup is complete. Shared operational skills, including <a href="https://github.com/mozilla-platform-ops/agent-skills/tree/main/skills/production-image-deploy"><code>production-image-deploy</code></a>, are installed separately.</p>
 </div>
 
 <!--
-Codex and OpenCode read AGENTS.md. Claude Code reads CLAUDE.md; the worker-images and fxci-config CLAUDE.md files contain @AGENTS.md.
+All three default branches now contain AGENTS.md. Each CLAUDE.md contains @AGENTS.md. ronin_puppet completed this setup in PR #1345 on 2026-08-20.
+Codex and OpenCode read AGENTS.md. Claude Code reads CLAUDE.md, which imports AGENTS.md in these repositories.
 None of the three repositories contains a repository-owned SKILL.md. The canonical production-image-deploy skill lives in mozilla-platform-ops/agent-skills.
-The current worker-images AGENTS.md still describes Tier 1 as the release bar. Update it to match the current OS integration process before we call the guidance complete.
 -->
 
 ---
