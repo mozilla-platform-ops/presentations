@@ -52,7 +52,7 @@ This map is the guide for the rest of the talk. Follow it from configuration on 
 
 ---
 
-# Configure: Three repositories, three roles
+# Three repositories, three roles
 
 <div class="surface-grid">
   <div class="card step"><h3><code>ronin_puppet</code></h3><p>Defines the software, policy, and operating-system state in Windows images.</p></div>
@@ -68,7 +68,7 @@ This map is the guide for the rest of the talk. Follow it from configuration on 
 
 ---
 
-# Build: Windows images for Azure
+# Windows images for Azure
 
 <div class="report-flow spacious" style="--columns: 3">
   <section class="report-stage" data-step="01"><h3>Choose the inputs</h3><p><code>worker-images</code> selects the Marketplace base image and a <code>ronin_puppet</code> commit.</p></section>
@@ -84,7 +84,7 @@ This map is the guide for the rest of the talk. Follow it from configuration on 
 
 ---
 
-# Build: Linux images for GCP
+# Linux images for GCP
 
 <div class="report-flow spacious" style="--columns: 3">
   <section class="report-stage" data-step="01"><h3>Choose the inputs</h3><p><code>worker-images</code> selects Ubuntu, architecture, scripts, and the Taskcluster version.</p></section>
@@ -100,7 +100,7 @@ This map is the guide for the rest of the talk. Follow it from configuration on 
 
 ---
 
-# Candidate: What is in a worker image?
+# What is in a worker image?
 
 The image contains the operating system and tools that a task uses.
 
@@ -121,7 +121,7 @@ Worker-Runner starts Generic Worker. Its binary is named start-worker. Taskclust
 
 ---
 
-# Validate: Test the candidate image
+# Test the candidate image
 
 <div class="report-flow" style="--columns: 5">
   <section class="report-stage" data-step="01"><h3>Publish</h3><p>Packer creates the candidate image.</p></section>
@@ -141,7 +141,7 @@ Worker-Runner starts Generic Worker. Its binary is named start-worker. Taskclust
 
 ---
 
-# Validate: Test the pool binding
+# Test the pool binding
 
 <div class="report-flow" style="--columns: 5">
   <section class="report-stage" data-step="01"><h3>Request</h3><p>Comment <code>/taskcluster integration</code> on the pull request.</p></section>
@@ -159,7 +159,7 @@ Worker-Runner starts Generic Worker. Its binary is named start-worker. Taskclust
 
 ---
 
-# Validate: Before production
+# Before production
 
 <div class="surface-grid">
   <div class="card step"><h3>Image checks</h3><p>Confirm the expected OS state, software, services, and Taskcluster components.</p></div>
@@ -177,7 +177,7 @@ Use gecko.v2.autoland.latest.taskgraph.decision as the build baseline. Do not us
 
 ---
 
-# Promote: Windows rebuilds, Linux copies
+# Windows rebuilds and Linux copies
 
 <div class="two-col" style="margin-top: 28px">
   <div class="card"><h3>Windows rebuilds</h3><p>Packer creates a production Azure image from the same source revision. The production image is a new build.</p></div>
@@ -194,7 +194,7 @@ Use gecko.v2.autoland.latest.taskgraph.decision as the build baseline. Do not us
 
 ---
 
-# Run: Create workers and run tasks
+# Create workers and run tasks
 
 <div class="surface-grid">
   <div class="card step"><h3>Select the image</h3><p><code>fxci-config</code> gives each worker pool an exact Azure or GCP image.</p></div>
