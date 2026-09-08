@@ -231,51 +231,37 @@ This path catches mapping and worker-pool errors that a worker-images build cann
 
 ---
 
-# OS integration is the release gate
+# Validation required before production
 
 <div class="surface-grid">
   <div class="card step"><h3>Image checks</h3><p>Confirm the expected OS state, software, services, and Taskcluster components.</p></div>
-  <div class="card step"><h3>worker-images</h3><p>Run the curated Gecko OS integration set on the matching alpha pools.</p></div>
-  <div class="card step"><h3>fxci-config</h3><p>Run OS integration against the pool and image binding proposed in the PR.</p></div>
+  <div class="card step"><h3>OS integration</h3><p>Test the candidate image and the proposed worker-pool binding.</p></div>
+  <div class="card step"><h3>Tier 1 tasks</h3><p>Run all Tier 1 tasks against the candidate image. Use builds from the latest autoland decision task.</p></div>
 </div>
 
 <div class="callout">
-  <p>Proceed when the required OS integration jobs pass and no new image-specific permanent failure remains.</p>
+  <p>Proceed only when all required checks pass and the candidate causes no Tier 1 regression.</p>
 </div>
 
 <!--
-The current jobs copy a curated mozilla-central OS integration task set. RelOps does not run every Tier 1 task as a routine image-release gate.
+Use gecko.v2.autoland.latest.taskgraph.decision as the build baseline. Do not use mozilla-central.
 -->
 
 ---
 
 # How we decide to deploy
 
-<div class="rule">OS integration must pass without a new permanent failure caused by the image.</div>
+<div class="rule">OS integration and all Tier 1 tasks must pass before deployment.</div>
 
 <ul>
-  <li>Run the worker-images checks on the matching alpha pool.</li>
+  <li>Run the worker-images checks and OS integration on the matching alpha pool.</li>
   <li>Run <code>/taskcluster integration</code> on the <code>fxci-config</code> PR.</li>
-  <li>Compare failures with the production pool or another control.</li>
-  <li>Record an existing Gecko failure or known intermittent that is not caused by the image.</li>
+  <li>Run Tier 1 tasks with builds from the latest autoland decision task.</li>
+  <li>Compare each failure with the production pool or another control.</li>
 </ul>
 
 <div class="callout stop">
-  <p>A repeatable failure that occurs only on the candidate image blocks deployment.</p>
-</div>
-
----
-
-# Classify each failure before release
-
-<div class="surface-grid">
-  <div class="card step"><h3>1 · Repeat</h3><p>Re-run the failed task to determine whether the result is repeatable.</p></div>
-  <div class="card step"><h3>2 · Control</h3><p>Run the same task on the production pool or another known-good environment.</p></div>
-  <div class="card step"><h3>3 · Decide</h3><p>Record an existing failure. Block a permanent failure that is specific to the candidate.</p></div>
-</div>
-
-<div class="callout">
-  <p>The question is not “did one task turn red?” The question is “did this image create a permanent failure?”</p>
+  <p>A new Tier 1 failure or a clear increase in Tier 1 intermittent failures blocks deployment.</p>
 </div>
 
 ---
