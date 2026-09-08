@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Firefox CI cloud worker image system map",
+    "locale": "en",
+    "quality_profile": "showcase",
+    "viewBox": [1380, 700]
+  },
+  "components": [
+    {
+      "id": "ronin_puppet",
+      "type": "backend",
+      "label": "ronin_puppet",
+      "sublabel": "Windows OS state",
+      "pos": [30, 105],
+      "size": [170, 68]
+    },
+    {
+      "id": "worker_images",
+      "type": "backend",
+      "label": "worker-images",
+      "sublabel": "Image config and scripts",
+      "pos": [30, 355],
+      "size": [170, 68]
+    },
+    {
+      "id": "image_build",
+      "type": "backend",
+      "label": "GitHub Actions + Packer",
+      "sublabel": "Build candidate images",
+      "pos": [240, 230],
+      "size": [190, 72]
+    },
+    {
+      "id": "windows_alpha",
+      "type": "cloud",
+      "label": "Windows alpha image",
+      "sublabel": "Azure Compute Gallery",
+      "pos": [475, 105],
+      "size": [180, 68]
+    },
+    {
+      "id": "linux_alpha",
+      "type": "cloud",
+      "label": "Linux alpha image",
+      "sublabel": "Google Compute Engine",
+      "pos": [475, 355],
+      "size": [180, 68]
+    },
+    {
+      "id": "validation",
+      "type": "security",
+      "label": "Release validation",
+      "sublabel": "OS integration + Tier 1",
+      "pos": [700, 230],
+      "size": [180, 72]
+    },
+    {
+      "id": "windows_prod",
+      "type": "cloud",
+      "label": "Windows production image",
+      "sublabel": "Rebuilt with Packer",
+      "pos": [930, 105],
+      "size": [190, 68]
+    },
+    {
+      "id": "linux_prod",
+      "type": "cloud",
+      "label": "Linux production image",
+      "sublabel": "Copied from alpha",
+      "pos": [930, 355],
+      "size": [190, 68]
+    },
+    {
+      "id": "fxci_config",
+      "type": "database",
+      "label": "fxci-config",
+      "sublabel": "Pool-to-image binding",
+      "pos": [1195, 65],
+      "size": [180, 68]
+    },
+    {
+      "id": "worker_manager",
+      "type": "backend",
+      "label": "Worker Manager",
+      "sublabel": "Creates cloud workers",
+      "pos": [1195, 220],
+      "size": [180, 68]
+    },
+    {
+      "id": "cloud_workers",
+      "type": "cloud",
+      "label": "Ephemeral cloud VMs",
+      "sublabel": "Generic Worker runs tasks",
+      "pos": [1195, 375],
+      "size": [180, 68]
+    },
+    {
+      "id": "firefox_ci",
+      "type": "external",
+      "label": "Firefox CI tasks",
+      "sublabel": "Builds, tests, and performance",
+      "pos": [1195, 530],
+      "size": [180, 68]
+    }
+  ],
+  "connections": [
+    {
+      "from": "ronin_puppet",
+      "to": "worker_images",
+      "label": "Windows configuration revision",
+      "variant": "emphasis",
+      "labelAt": [115, 187]
+    },
+    {
+      "from": "worker_images",
+      "to": "image_build",
+      "label": "Build definitions",
+      "variant": "emphasis"
+    },
+    {
+      "from": "image_build",
+      "to": "windows_alpha",
+      "label": "Packer build"
+    },
+    {
+      "from": "image_build",
+      "to": "linux_alpha",
+      "label": "Packer build"
+    },
+    {
+      "from": "windows_alpha",
+      "to": "validation",
+      "label": "Candidate"
+    },
+    {
+      "from": "linux_alpha",
+      "to": "validation",
+      "label": "Candidate"
+    },
+    {
+      "from": "validation",
+      "to": "windows_prod",
+      "label": "Rebuild",
+      "variant": "emphasis"
+    },
+    {
+      "from": "validation",
+      "to": "linux_prod",
+      "label": "Copy without rebuild",
+      "variant": "emphasis"
+    },
+    {
+      "from": "windows_prod",
+      "to": "fxci_config",
+      "label": "Gallery version",
+      "labelAt": [1040, 187]
+    },
+    {
+      "from": "linux_prod",
+      "to": "fxci_config",
+      "label": "Dated image path",
+      "labelAt": [1158, 302]
+    },
+    {
+      "from": "fxci_config",
+      "to": "worker_manager",
+      "label": "Apply worker-pool definition",
+      "variant": "emphasis",
+      "labelAt": [1285, 147]
+    },
+    {
+      "from": "worker_manager",
+      "to": "cloud_workers",
+      "label": "Provision selected image",
+      "labelAt": [1285, 302]
+    },
+    {
+      "from": "cloud_workers",
+      "to": "firefox_ci",
+      "label": "Run task",
+      "labelAt": [1285, 457]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "violet",
+      "title": "Windows path",
+      "items": [
+        "ronin_puppet defines the OS state",
+        "worker-images builds and validates alpha",
+        "Packer builds a new production image"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Linux path",
+      "items": [
+        "worker-images contains config and provisioning",
+        "The alpha image passes release validation",
+        "GCP copies the same filesystem into production"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "Firefox CI path",
+      "items": [
+        "fxci-config selects the exact production image",
+        "Worker Manager creates an ephemeral VM",
+        "Generic Worker runs the Firefox CI task"
+      ]
+    }
+  ]
+}
